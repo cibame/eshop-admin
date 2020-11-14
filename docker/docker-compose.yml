@@ -1,0 +1,13 @@
+version: '3.3'
+
+services:
+  db:
+    image: postgres
+    container_name: db
+    restart: unless-stopped
+    ports:
+      - 5432:5432
+    environment:
+      POSTGRES_DB: eshop
+      POSTGRES_USER: root
+      POSTGRES_PASSWORD: root
