@@ -9,7 +9,7 @@ async function bootstrap() {
   // if (['development', 'staging'].includes(configService.nodeEnv)) {
   setupSwagger(app);
   // }
-  
+
   await app.listen(3000);
 }
 bootstrap();
