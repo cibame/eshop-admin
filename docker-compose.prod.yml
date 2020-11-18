@@ -1,0 +1,23 @@
+version: '3.3'
+
+services:
+  app:
+    env_file:
+      - .production.env
+    container_name: awesome_nest_boilerplate
+    restart: always
+    build: .
+    ports:
+      - 3000:3000
+    links:
+      - db
+  db:
+    image: postgres
+    container_name: db
+    restart: unless-stopped
+    ports:
+      - 5432:5432
+    environment:
+      POSTGRES_DB: eshop
+      POSTGRES_USER: root
+      POSTGRES_PASSWORD: root
