@@ -4,12 +4,15 @@ services:
   app:
     env_file:
       - .production.env
-    container_name: awesome_nest_boilerplate
+    container_name: app
+    command: sh -c "npx fixtures -d test/fixtures -c ormconfig.prod.yml && npm run start:prod"
     restart: always
     build: .
     ports:
       - 3000:3000
     links:
+      - db
+    depends_on:
       - db
   db:
     image: postgres
