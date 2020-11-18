@@ -1,8 +1,0 @@
-entity: OrderUser
-  items:
-    paolo: 
-      firstName
-lastName
-email
-address
-telephone
