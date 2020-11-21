@@ -9,6 +9,15 @@ import {
 } from 'typeorm';
 import { Category } from '../../categories/entities/category.entity';
 
+export class ColumnNumericTransformer {
+  to(data: number): number {
+    return data;
+  }
+  from(data: string): number {
+    return parseFloat(data);
+  }
+}
+
 @Entity()
 export class Product {
   @ApiProperty({ readOnly: true })
@@ -21,7 +30,11 @@ export class Product {
   @Column({ nullable: true })
   description: string;
   @ApiProperty({ readOnly: true })
-  @Column({ type: 'decimal', nullable: false })
+  @Column({
+    type: 'decimal',
+    nullable: false,
+    transformer: new ColumnNumericTransformer(),
+  })
   price: number;
   @ApiProperty({ readOnly: true })
   @Column({ nullable: true })

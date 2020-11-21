@@ -1,6 +1,8 @@
 import { HttpServer, HttpStatus, INestApplication } from '@nestjs/common';
 import * as request from 'supertest';
 import { TestUtils } from '../../../../test/utils/test.util';
+import { CreateOrderDto } from '../dto/create-order.dto';
+import { Order } from '../entities/order.entity';
 import { OrdersModule } from '../orders.module';
 
 describe('Orders Module', () => {
@@ -21,36 +23,70 @@ describe('Orders Module', () => {
   });
 
   describe('POST /products API', () => {
+    const newOrder: CreateOrderDto = {
+      note: 'note',
+      user: {
+        firstName: 'name',
+        lastName: 'lastname',
+        email: 'string@string.com',
+        address: 'Via tormini',
+        telephone: '3292783809',
+      },
+      products: [
+        {
+          productId: 1,
+          quantity: 3,
+        },
+      ],
+    };
+
+    // From fixtures
+    const productPrice = 10;
+
     it('[NOT-AUTHENTICATED] must create a products ', () => {
       return request(httpServer)
-        .get('/products')
-        .expect(HttpStatus.OK)
+        .post('/orders')
+        .send(newOrder)
+        .expect(HttpStatus.CREATED)
         .then(({ body }) => {
-          expect(body.length).toEqual(10);
           // Validate all key in object are presents
-          const testElement: Product = body[0];
-          expect(testElement.id).not.toBeNull();
-          expect(testElement.name).not.toBeNull();
-          expect(testElement.description).not.toBeNull();
-          expect(testElement.price).not.toBeNull();
-          expect(testElement.image).not.toBeNull();
+          const testElement: Order = body;
+          expect(testElement.id).toBe(2);
+          // Match user
+          expect(testElement.user).toMatchObject(newOrder.user);
+          // Match products
+          expect(testElement.products.length).toBe(1);
+          expect(testElement.products[0].product.id).toBe(
+            newOrder.products[0].productId,
+          );
+          expect(testElement.products[0].quantity).toBe(
+            newOrder.products[0].quantity,
+          );
+          expect(testElement.products[0].price).toBe(productPrice);
         });
     });
 
     it('[NOT-AUTHENTICATED] must return 400 if one of the product does not exists ', () => {
+      const newOrder: CreateOrderDto = {
+        note: 'note',
+        user: {
+          firstName: 'name',
+          lastName: 'lastname',
+          email: 'string@string.com',
+          address: 'Via tormini',
+          telephone: '3292783809',
+        },
+        products: [
+          {
+            productId: 99,
+            quantity: 3,
+          },
+        ],
+      };
       return request(httpServer)
-        .get('/products')
-        .expect(HttpStatus.OK)
-        .then(({ body }) => {
-          expect(body.length).toEqual(10);
-          // Validate all key in object are presents
-          const testElement: Product = body[0];
-          expect(testElement.id).not.toBeNull();
-          expect(testElement.name).not.toBeNull();
-          expect(testElement.description).not.toBeNull();
-          expect(testElement.price).not.toBeNull();
-          expect(testElement.image).not.toBeNull();
-        });
+        .post('/orders')
+        .send(newOrder)
+        .expect(HttpStatus.BAD_REQUEST);
     });
   });
 });

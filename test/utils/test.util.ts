@@ -33,7 +33,7 @@ export class TestUtils {
             username: configService.get<string>('DB_TEST_USERNAME'),
             password: configService.get<string>('DB_TEST_PASSWORD'),
             database: configService.get<string>('DB_TEST_DATABASE'),
-            autoLoadEntities: true,
+            entities: ['src/**/*.entity{.ts,.js}'],
             synchronize: true,
           } as PostgresConnectionOptions;
         },
