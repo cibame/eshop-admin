@@ -23,12 +23,13 @@ export class OrdersService {
 
   async create(createOrderDto: CreateOrderDto) {
     // Save all the products related to the order
-    console.log(createOrderDto);
     const products = [];
+    console.log(createOrderDto);
     for (const orderProductDto of createOrderDto.products) {
       const product = await this._productRepository.findOne(
         orderProductDto.productId,
       );
+      console.log(product);
       if (!product) {
         continue;
       }
@@ -37,7 +38,6 @@ export class OrdersService {
       orderProduct.price = product.price;
       orderProduct.quantity = orderProductDto.quantity;
       orderProduct.product = product;
-      console.log(orderProduct);
       products.push(await this._orderProductRepository.save(orderProduct));
     }
 
@@ -50,6 +50,7 @@ export class OrdersService {
     order.note = createOrderDto.note;
     order.products = products;
     order.user = user;
+
     return await this._orderRepository.save(order);
   }
 

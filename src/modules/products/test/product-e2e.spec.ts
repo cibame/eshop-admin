@@ -27,7 +27,7 @@ describe('Products Module', () => {
         .get('/products')
         .expect(HttpStatus.OK)
         .then(({ body }) => {
-          expect(body.length).toEqual(10);
+          expect(body.length).toEqual(12);
           // Validate all key in object are presents
           const testElement: Product = body[0];
           expect(testElement.id).not.toBeNull();

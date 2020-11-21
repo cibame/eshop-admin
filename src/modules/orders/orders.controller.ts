@@ -10,6 +10,7 @@ import {
 import { ApiCreatedResponse, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { CreateOrderDto } from './dto/create-order.dto';
 import { Order } from './entities/order.entity';
+import { OrderProductPipe } from './order-product.pipe';
 import { OrdersService } from './orders.service';
 
 @Controller('orders')
@@ -20,6 +21,7 @@ export class OrdersController {
 
   @Post()
   @ApiCreatedResponse({ type: Order })
+  @UsePipes(OrderProductPipe)
   create(@Body() createOrderDto: CreateOrderDto) {
     return this.ordersService.create(createOrderDto);
   }
