@@ -22,3 +22,13 @@ services:
       - DATABASE_URL=postgres://root:root@postgres:5432/postgres?sslmode=disable
     depends_on:
       - postgres
+  test-db:
+    image: postgres
+    container_name: test-db
+    restart: unless-stopped
+    ports:
+      - 5433:5432
+    environment:
+      POSTGRES_DB: test
+      POSTGRES_USER: root
+      POSTGRES_PASSWORD: root
