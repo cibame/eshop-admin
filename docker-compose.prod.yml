@@ -5,7 +5,7 @@ services:
     env_file:
       - .production.env
     container_name: app
-    command: sh -c "npx fixtures -d test/fixtures -c ormconfig.prod.yml && npm run start:prod"
+    command: sh -c "npx fixtures -s -d test/fixtures -c ormconfig.prod.yml && npm run start:prod"
     restart: always
     build: .
     ports:
