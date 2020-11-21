@@ -3,7 +3,7 @@ version: '3.3'
 services:
   postgres:
     image: postgres
-    container_name: postgres
+    container_name: db
     restart: unless-stopped
     ports:
       - 5432:5432
@@ -22,6 +22,7 @@ services:
       - DATABASE_URL=postgres://root:root@postgres:5432/postgres?sslmode=disable
     depends_on:
       - postgres
+
   test-db:
     image: postgres
     container_name: test-db

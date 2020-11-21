@@ -26,7 +26,7 @@ export class Product {
   @ApiProperty({ readOnly: true })
   @Column({ nullable: true })
   image: string;
-  @ApiProperty({ readOnly: true })
+  @ApiProperty({ readOnly: true, type: () => Category })
   @ManyToOne(
     () => Category,
     category => category.products,

@@ -2,5 +2,5 @@ entity: Category
 items:
   category1:
     name: 'dolci'
-  category-piatti:
+  category2:
     name: piatti
