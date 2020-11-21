@@ -8,6 +8,8 @@ import {
   Put,
   Req,
   UseGuards,
+  UsePipes,
+  ValidationPipe,
 } from '@nestjs/common';
 import { ApiResponse, ApiTags } from '@nestjs/swagger';
 import { CreateProductDto } from './dto/create-product.dto';
@@ -17,7 +19,8 @@ import { ProductGuard } from './guard/product.guard';
 import { ProductsService } from './products.service';
 
 @Controller('products')
-@ApiTags('Products')
+@ApiTags('products')
+@UsePipes(new ValidationPipe({ transform: true, whitelist: true }))
 export class ProductsController {
   constructor(private readonly productsService: ProductsService) {}
 

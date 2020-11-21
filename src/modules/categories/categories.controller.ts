@@ -6,8 +6,10 @@ import {
   Param,
   Post,
   Put,
+  UsePipes,
+  ValidationPipe,
 } from '@nestjs/common';
-import { ApiResponse } from '@nestjs/swagger';
+import { ApiResponse, ApiTags } from '@nestjs/swagger';
 import { CategoriesService } from './categories.service';
 import { CreateCategoryDto } from './dto/create-category.dto';
 import { UpdateCategoryDto } from './dto/update-category.dto';
@@ -15,6 +17,8 @@ import { Category } from './entities/category.entity';
 
 // TODO: authentcate this API, must be accessible only to admins
 @Controller('categories')
+@ApiTags('categories')
+@UsePipes(new ValidationPipe({ transform: true, whitelist: true }))
 export class CategoriesController {
   constructor(private readonly categoriesService: CategoriesService) {}
 

@@ -1,0 +1,5 @@
+entity: Order
+items:
+  order1:
+    note: 'Note allegate ordine 1'
+    user: '@order-user1'

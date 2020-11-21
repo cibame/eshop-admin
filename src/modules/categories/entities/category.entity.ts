@@ -16,7 +16,7 @@ export class Category {
   @ApiProperty({ readOnly: true })
   @Column()
   name: string;
-  @ApiProperty({ readOnly: true, type: Product, isArray: true })
+  @ApiProperty({ readOnly: true, type: () => Product, isArray: true })
   @OneToMany(
     () => Product,
     product => product.category,
