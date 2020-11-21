@@ -1,5 +1,13 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import {
+  Column,
+  CreateDateColumn,
+  Entity,
+  ManyToOne,
+  PrimaryGeneratedColumn,
+  UpdateDateColumn,
+} from 'typeorm';
+import { Category } from '../../categories/entities/category.entity';
 
 @Entity()
 export class Product {
@@ -18,7 +26,15 @@ export class Product {
   @ApiProperty({ readOnly: true })
   @Column({ nullable: true })
   image: string;
-
-  // TODO: create category and setup relation
-  // category:
+  @ApiProperty({ readOnly: true, type: () => Category })
+  @ManyToOne(
+    () => Category,
+    category => category.products,
+    { eager: true },
+  )
+  category: Category;
+  @CreateDateColumn()
+  createdDate: Date;
+  @UpdateDateColumn()
+  updateddDate: Date;
 }

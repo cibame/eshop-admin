@@ -1,0 +1,6 @@
+entity: Category
+items:
+  category1:
+    name: 'dolci'
+  category2:
+    name: piatti

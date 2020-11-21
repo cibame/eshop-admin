@@ -3,6 +3,7 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { DatabaseType } from 'typeorm';
 import { PostgresConnectionOptions } from 'typeorm/driver/postgres/PostgresConnectionOptions';
+import { CategoriesModule } from './modules/categories/categories.module';
 import { ProductsModule } from './modules/products/products.module';
 
 @Module({
@@ -24,6 +25,9 @@ import { ProductsModule } from './modules/products/products.module';
       },
       inject: [ConfigService],
     }),
+
+    // Feature modules
+    CategoriesModule,
     ProductsModule,
   ],
   controllers: [],

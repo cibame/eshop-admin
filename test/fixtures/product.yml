@@ -5,3 +5,4 @@ items:
     description: '{{lorem.paragraph}}'
     price: '{{commerce.price}}'
     image: '{{image.image}}'
+    category: '@category*'
