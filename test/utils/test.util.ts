@@ -21,7 +21,6 @@ export class TestUtils {
   public static async initializeApp(
     modules?: Array<any>,
   ): Promise<INestApplication> {
-    console.log(__dirname + '/**/*.entity{.ts,.js}');
     const defaultImports = [
       ConfigModule.forRoot({ isGlobal: true }),
       TypeOrmModule.forRootAsync({
