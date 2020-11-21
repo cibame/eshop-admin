@@ -1,0 +1,12 @@
+entity: OrderProduct
+items:
+  order-product1:
+    quantity: 2
+    price: 10
+    product: '@product-order1'
+    order: '@order1'
+  order-product2:
+    quantity: 1
+    price: 5
+    product: '@product-order2'
+    order: '@order1'

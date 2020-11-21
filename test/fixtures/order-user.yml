@@ -1,0 +1,8 @@
+entity: OrderUser
+items:
+  order-user1:
+    firstName: OrderUserNome1
+    lastName: OrderUserCognome1
+    email: email@orderuser.1
+    address: 'address order user1'
+    telephone: 3298811324
