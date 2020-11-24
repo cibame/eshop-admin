@@ -1,5 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
 import {
+  BaseEntity,
   Column,
   CreateDateColumn,
   Entity,
@@ -10,7 +11,7 @@ import { Product } from '../../products/entities/product.entity';
 import { Order } from './order.entity';
 
 @Entity()
-export class OrderProduct {
+export class OrderProduct extends BaseEntity {
   @PrimaryGeneratedColumn()
   @ApiProperty({ readOnly: true })
   id: number;
