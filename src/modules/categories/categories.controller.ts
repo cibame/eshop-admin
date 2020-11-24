@@ -19,7 +19,12 @@ import { Category } from './entities/category.entity';
 @Controller('categories')
 @ApiTags('categories')
 @UsePipes(new ValidationPipe({ transform: true, whitelist: true }))
-export class CategoriesController {
+export class CategoriesController {}
+
+/**
+ * Hidden class to hide some of the features for the first release of the platform
+ */
+export class HideCategories {
   constructor(private readonly categoriesService: CategoriesService) {}
 
   @Post()
