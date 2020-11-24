@@ -24,11 +24,6 @@ import { ProductsService } from './products.service';
 export class ProductsController {
   constructor(private readonly productsService: ProductsService) {}
 
-  @Post()
-  create(@Body() createProductDto: CreateProductDto) {
-    return this.productsService.create(createProductDto);
-  }
-
   @Get()
   @ApiResponse({ type: Product, isArray: true })
   findAll(): Promise<Product[]> {
@@ -40,6 +35,18 @@ export class ProductsController {
   @ApiResponse({ type: Product })
   findOne(@Param('id') _: string, @Req() req): Promise<Product> {
     return req.product;
+  }
+}
+
+/**
+ * Hidden class to hide some of the features for the first release of the platform
+ */
+export class HideProducts {
+  constructor(private readonly productsService: ProductsService) {}
+
+  @Post()
+  create(@Body() createProductDto: CreateProductDto) {
+    return this.productsService.create(createProductDto);
   }
 
   @Put(':id')

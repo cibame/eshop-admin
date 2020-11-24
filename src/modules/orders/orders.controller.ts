@@ -25,6 +25,10 @@ export class OrdersController {
   create(@Body() createOrderDto: CreateOrderDto) {
     return this.ordersService.create(createOrderDto);
   }
+}
+
+export class HideOrder {
+  constructor(private readonly ordersService: OrdersService) {}
 
   @Get()
   @ApiResponse({ type: Order })
