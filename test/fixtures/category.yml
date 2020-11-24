@@ -2,5 +2,6 @@ entity: Category
 items:
   category1:
     name: 'dolci'
+    description: 'I dolci migliori che ci siano'
   category2:
     name: piatti

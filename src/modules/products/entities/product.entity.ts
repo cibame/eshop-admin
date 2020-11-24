@@ -28,6 +28,9 @@ export class Product {
   name: string;
   @ApiProperty({ readOnly: true })
   @Column({ nullable: true })
+  detail: string;
+  @ApiProperty({ readOnly: true })
+  @Column({ nullable: true })
   description: string;
   @ApiProperty({ readOnly: true })
   @Column({
