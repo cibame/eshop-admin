@@ -17,6 +17,7 @@ items:
   product-order2:
     id: 2
     name: 'Prodotto Test Ordine 2'
+    detail: '25 cl'
     description: '{{lorem.paragraph}}'
     price: 5
     image: '{{image.image}}'
