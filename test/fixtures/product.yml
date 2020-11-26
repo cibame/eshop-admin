@@ -3,6 +3,7 @@ items:
   product{1..10}:
     name: '{{commerce.productName}}'
     description: '{{lorem.paragraph}}'
+    ingredients: '{{lorem.paragraph}}'
     price: 15.5
     image: '{{image.image}}'
     category: '@category*'
@@ -11,6 +12,7 @@ items:
     id: 1
     name: 'Prodotto Test Ordine 1'
     description: '{{lorem.paragraph}}'
+    ingredients: '{{lorem.paragraph}}'
     price: 10
     image: '{{image.image}}'
     category: '@category1'
@@ -19,6 +21,7 @@ items:
     name: 'Prodotto Test Ordine 2'
     detail: '25 cl'
     description: '{{lorem.paragraph}}'
+    ingredients: '{{lorem.paragraph}}'
     price: 5
     image: '{{image.image}}'
     category: '@category2'
