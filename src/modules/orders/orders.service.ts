@@ -24,12 +24,12 @@ export class OrdersService {
   async create(createOrderDto: CreateOrderDto) {
     // Save all the products related to the order
     const products = [];
-    console.log(createOrderDto);
+
     for (const orderProductDto of createOrderDto.products) {
       const product = await this._productRepository.findOne(
         orderProductDto.productId,
       );
-      console.log(product);
+
       if (!product) {
         continue;
       }
