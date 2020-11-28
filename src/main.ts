@@ -4,6 +4,7 @@ import { setupSwagger } from './swagger.config';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
+  app.enableCors();
 
   // TODO: activate swagger not in production
   // if (['development', 'staging'].includes(configService.nodeEnv)) {
