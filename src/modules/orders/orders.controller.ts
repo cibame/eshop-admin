@@ -32,6 +32,7 @@ export class OrdersController {
   async create(@Body() createOrderDto: CreateOrderDto) {
     const order = await this.ordersService.create(createOrderDto);
     try {
+      // TODO: e2e test this feature
       this.mailerProvider.send({
         to: createOrderDto.user.email,
         subject: 'Conferma del tuo ordine',

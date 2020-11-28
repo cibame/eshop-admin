@@ -2,6 +2,7 @@ import { ApiProperty } from '@nestjs/swagger';
 import { Type } from 'class-transformer';
 import {
   IsEmail,
+  IsEnum,
   IsNotEmpty,
   IsNumber,
   IsOptional,
@@ -10,6 +11,7 @@ import {
   IsString,
   ValidateNested,
 } from 'class-validator';
+import { OrderType } from '../entities/order.entity';
 
 export class CreateOrderProductDto {
   @IsNumber()
@@ -51,6 +53,10 @@ export class CreateOrderDto {
   @IsString()
   @ApiProperty()
   note: string;
+
+  @IsEnum(OrderType)
+  @ApiProperty({ enum: OrderType })
+  type: OrderType;
 
   @ValidateNested()
   @ApiProperty({ type: () => CreateOrderUserDto })

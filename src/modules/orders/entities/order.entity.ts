@@ -14,6 +14,11 @@ import {
 import { OrderProduct } from './order-product.entity';
 import { OrderUser } from './order-user.entity';
 
+export enum OrderType {
+  Pickup = 'pickup',
+  Delivery = 'delivery',
+}
+
 @Entity()
 export class Order extends BaseEntity {
   @PrimaryGeneratedColumn()
@@ -23,6 +28,15 @@ export class Order extends BaseEntity {
   @Column()
   @ApiProperty()
   note: string;
+
+  @Column({
+    type: 'enum',
+    enum: OrderType,
+    default: OrderType.Pickup,
+    nullable: false,
+  })
+  @ApiProperty()
+  type: OrderType;
 
   @OneToOne(() => OrderUser)
   @JoinColumn()
