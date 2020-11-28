@@ -6,6 +6,7 @@ import {
   Entity,
   PrimaryGeneratedColumn,
 } from 'typeorm';
+
 @Entity()
 export class OrderUser extends BaseEntity {
   @PrimaryGeneratedColumn()

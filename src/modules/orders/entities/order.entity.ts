@@ -8,6 +8,7 @@ import {
   OneToMany,
   OneToOne,
   PrimaryGeneratedColumn,
+  RelationId,
   UpdateDateColumn,
 } from 'typeorm';
 import { OrderProduct } from './order-product.entity';
@@ -35,6 +36,10 @@ export class Order extends BaseEntity {
   @ApiProperty({ type: () => OrderProduct, readOnly: true })
   products: OrderProduct[];
   // TODO: add a total computed column
+
+  @RelationId((order: Order) => order.user)
+  userId: number;
+
   @CreateDateColumn()
   dateCreated: Date;
   @UpdateDateColumn()
