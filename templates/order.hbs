@@ -1,0 +1,7 @@
+<h1>Hai un nuovo ordine</h1>
+
+<ul>
+    {{#each order.products}}
+    <li>{{this.product.name}} - {{this.quantity}}</li>
+    {{/each}}
+</ul>

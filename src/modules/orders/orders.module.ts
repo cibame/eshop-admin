@@ -1,5 +1,6 @@
 import { forwardRef, Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { SharedModule } from '../../shared/shared.module';
 import { Product } from '../products/entities/product.entity';
 import { ProductsModule } from '../products/products.module';
 import { OrderProduct } from './entities/order-product.entity';
@@ -13,6 +14,7 @@ import { OrdersService } from './orders.service';
   imports: [
     forwardRef(() => ProductsModule),
     TypeOrmModule.forFeature([Order, OrderProduct, OrderUser, Product]),
+    SharedModule,
   ],
   controllers: [OrdersController],
   providers: [OrdersService, OrderProductPipe],
