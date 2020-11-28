@@ -2,4 +2,5 @@ entity: Order
 items:
   order1:
     note: 'Note allegate ordine 1'
+    type: 'pickup'
     user: '@order-user1'
