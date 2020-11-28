@@ -2,6 +2,7 @@ import {
   Body,
   Controller,
   Get,
+  NotFoundException,
   Param,
   Post,
   UsePipes,
@@ -25,6 +26,19 @@ export class OrdersController {
   create(@Body() createOrderDto: CreateOrderDto) {
     return this.ordersService.create(createOrderDto);
   }
+
+  @Get(':id')
+  @ApiResponse({ type: Order })
+  findOne(@Param('id') id: string) {
+    // TODO: improve using a guard
+    // TODO: Test
+    const order = this.ordersService.findOne(+id);
+    if (!order) {
+      throw new NotFoundException();
+    }
+
+    return order;
+  }
 }
 
 export class HideOrder {
@@ -34,12 +48,6 @@ export class HideOrder {
   @ApiResponse({ type: Order })
   findAll() {
     return this.ordersService.findAll();
-  }
-
-  @Get(':id')
-  @ApiResponse({ type: Order })
-  findOne(@Param('id') id: string) {
-    return this.ordersService.findOne(+id);
   }
 
   //TODO: evaluate what can be changed for a single order

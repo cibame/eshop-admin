@@ -62,7 +62,7 @@ export class OrdersService {
 
   findOne(id: number) {
     return this._orderRepository.findOne(id, {
-      relations: ['user', 'products'],
+      relations: ['user', 'products', 'products.product'],
     });
   }
 
