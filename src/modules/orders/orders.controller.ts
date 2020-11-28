@@ -8,7 +8,9 @@ import {
   UsePipes,
   ValidationPipe,
 } from '@nestjs/common';
+import { ConfigService } from '@nestjs/config';
 import { ApiCreatedResponse, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { MailerProvider } from '../../shared/mailer/mailer/mailer.provider';
 import { CreateOrderDto } from './dto/create-order.dto';
 import { Order } from './entities/order.entity';
 import { OrderProductPipe } from './order-product.pipe';
@@ -18,13 +20,32 @@ import { OrdersService } from './orders.service';
 @ApiTags('orders')
 @UsePipes(new ValidationPipe({ transform: true, whitelist: true }))
 export class OrdersController {
-  constructor(private readonly ordersService: OrdersService) {}
+  constructor(
+    private readonly ordersService: OrdersService,
+    private readonly mailerProvider: MailerProvider,
+    private readonly configService: ConfigService,
+  ) {}
 
   @Post()
   @ApiCreatedResponse({ type: Order })
   @UsePipes(OrderProductPipe)
-  create(@Body() createOrderDto: CreateOrderDto) {
-    return this.ordersService.create(createOrderDto);
+  async create(@Body() createOrderDto: CreateOrderDto) {
+    const order = await this.ordersService.create(createOrderDto);
+    try {
+      this.mailerProvider.send({
+        to: createOrderDto.user.email,
+        subject: 'Conferma del tuo ordine',
+        template: 'order',
+        params: {
+          order,
+        },
+      });
+    } catch (err) {
+      //TODO: handle error better
+      console.error(err);
+    }
+
+    return order;
   }
 
   @Get(':id')
