@@ -1,5 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
 import {
+  BaseEntity,
   Column,
   CreateDateColumn,
   Entity,
@@ -7,13 +8,14 @@ import {
   OneToMany,
   OneToOne,
   PrimaryGeneratedColumn,
+  RelationId,
   UpdateDateColumn,
 } from 'typeorm';
 import { OrderProduct } from './order-product.entity';
 import { OrderUser } from './order-user.entity';
 
 @Entity()
-export class Order {
+export class Order extends BaseEntity {
   @PrimaryGeneratedColumn()
   @ApiProperty({ readOnly: true })
   id: number;
@@ -34,6 +36,10 @@ export class Order {
   @ApiProperty({ type: () => OrderProduct, readOnly: true })
   products: OrderProduct[];
   // TODO: add a total computed column
+
+  @RelationId((order: Order) => order.user)
+  userId: number;
+
   @CreateDateColumn()
   dateCreated: Date;
   @UpdateDateColumn()
