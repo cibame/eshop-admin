@@ -44,7 +44,7 @@ jobs:
         id: docker_meta
         uses: crazy-max/ghaction-docker-meta@v1
         with:
-          images: ghcr.io/pablosproject/eshop-app
+          images: ghcr.io/pablosproject/eshop-admin
           tag-sha: true
           tag-semver: |
             {{version}}
