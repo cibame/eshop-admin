@@ -6,7 +6,8 @@
   "private": true,
   "license": "UNLICENSED",
   "scripts": {
-    "fixtures": "npx fixtures -s -d test/fixtures",
+    "fixtures:dev": "npx fixtures -s -d test/fixtures",
+    "fixtures:prod": "npx fixtures -s -d test/fixtures -c ormconfig.prod.yml",
     "prebuild": "rimraf dist",
     "build": "nest build",
     "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
