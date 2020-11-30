@@ -1,9 +1,10 @@
+# Used for local development and tests
 version: '3.3'
 
 services:
   postgres:
     image: postgres
-    container_name: eshopo-db
+    container_name: eshop-db
     restart: unless-stopped
     ports:
       - 5432:5432
