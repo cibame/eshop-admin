@@ -49,7 +49,6 @@ jobs:
           tag-semver: |
             {{version}}
             {{major}}.{{minor}}
-          
 
       - name: Set up Docker Buildx
         id: buildx
@@ -84,3 +83,10 @@ jobs:
 
       - name: Logout from docker
         run: docker logout
+
+      - name: Repository Dispatch
+        uses: peter-evans/repository-dispatch@v1
+        with:
+          token: ${{ secrets.DISPATCH_PAT }}
+          repository: pablosproject/eshop-devops
+          event-type: package-published

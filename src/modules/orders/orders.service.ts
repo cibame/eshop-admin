@@ -49,6 +49,7 @@ export class OrdersService {
     const order = new Order();
     order.note = createOrderDto.note;
     order.products = products;
+    order.type = createOrderDto.type;
     order.user = user;
 
     return await this._orderRepository.save(order);
