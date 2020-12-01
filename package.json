@@ -20,9 +20,15 @@
     "test:watch": "jest --watch",
     "test:cov": "jest --coverage",
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
-    "test:e2e": "jest --config ./test/jest-e2e.json"
+    "test:e2e": "jest --config ./test/jest-e2e.json",
+    "start-admin:dev": "nest start --watch --config=nest-cli-admin.json",
+    "start-admin:prod": "node dist/main-admin",
+    "build-admin": "nest build --config=nest-cli-admin.json"
   },
   "dependencies": {
+    "@admin-bro/express": "3.0.1",
+    "@admin-bro/nestjs": "1.0.0",
+    "@admin-bro/typeorm": "^1.4.0",
     "@nestjs-modules/mailer": "1.5.1",
     "@nestjs/common": "~7.5.5",
     "@nestjs/config": "~0.6.1",
@@ -35,6 +41,9 @@
     "class-validator": "^0.12.2",
     "ejs": "3.1.5",
     "handlebars": "4.7.6",
+    "express-formidable": "1.2.0",
+    "express-session": "1.17.1",
+    "express": "4.17.1",
     "pg": "^8.5.1",
     "pug": "3.0.0",
     "reflect-metadata": "^0.1.13",
