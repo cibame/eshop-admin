@@ -53,6 +53,10 @@ export class Order extends BaseEntity {
   @ApiProperty({ readOnly: true })
   status: OrderStatus;
 
+  @Column({ nullable: false })
+  @ApiProperty({ readOnly: true })
+  uuid: string;
+
   @OneToOne(() => OrderUser)
   @JoinColumn()
   @ApiProperty({ type: () => OrderUser, readOnly: true })

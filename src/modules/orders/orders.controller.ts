@@ -49,12 +49,10 @@ export class OrdersController {
     return order;
   }
 
-  @Get(':id')
+  @Get(':uuid')
   @ApiResponse({ type: Order })
-  findOne(@Param('id') id: string) {
-    // TODO: improve using a guard
-    // TODO: Test
-    const order = this.ordersService.findOne(+id);
+  findOne(@Param('uuid') uuid: string) {
+    const order = this.ordersService.findOne(uuid);
     if (!order) {
       throw new NotFoundException();
     }
