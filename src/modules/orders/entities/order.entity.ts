@@ -19,6 +19,12 @@ export enum OrderType {
   Delivery = 'delivery',
 }
 
+export enum OrderStatus {
+  WaitingConfirmation = 'waiting-confirmation',
+  Confirmed = 'confirmed',
+  Cancelled = 'cancelled',
+}
+
 @Entity()
 export class Order extends BaseEntity {
   @PrimaryGeneratedColumn()
@@ -26,7 +32,7 @@ export class Order extends BaseEntity {
   id: number;
 
   @Column()
-  @ApiProperty()
+  @ApiProperty({ readOnly: true })
   note: string;
 
   @Column({
@@ -35,8 +41,17 @@ export class Order extends BaseEntity {
     default: OrderType.Pickup,
     nullable: false,
   })
-  @ApiProperty()
+  @ApiProperty({ readOnly: true })
   type: OrderType;
+
+  @Column({
+    type: 'enum',
+    enum: OrderStatus,
+    default: OrderStatus.WaitingConfirmation,
+    nullable: false,
+  })
+  @ApiProperty({ readOnly: true })
+  status: OrderStatus;
 
   @OneToOne(() => OrderUser)
   @JoinColumn()

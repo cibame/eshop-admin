@@ -35,6 +35,7 @@ describe('Products Module', () => {
           expect(testElement.description).not.toBeNull();
           expect(testElement.price).not.toBeNull();
           expect(testElement.image).not.toBeNull();
+          expect(testElement.active).toBeTruthy();
         });
     });
   });
