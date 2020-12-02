@@ -143,31 +143,36 @@ describe('Orders Module', () => {
       expect(testElement.id).toBe(2);
       expect(testElement.status).toBe(OrderStatus.WaitingConfirmation);
     });
-  });
 
-  describe('GET /products API', () => {
-    it('[NOT-AUTHENTICATED] must return 400 if one of the product does not exists ', (): request.Test => {
-      const newOrder: CreateOrderDto = {
-        note: 'note',
-        type: OrderType.Delivery,
-        user: {
-          firstName: 'name',
-          lastName: 'lastname',
-          email: 'string@string.com',
-          address: 'Via tormini',
-          telephone: '3292783809',
-        },
-        products: [
-          {
-            productId: 99,
-            quantity: 3,
-          },
-        ],
-      };
-      return request(httpServer)
+    it('[NOT-AUTHENTICATED] must create an UUID attached to the order', async () => {
+      const { body } = await request(httpServer)
         .post('/orders')
         .send(newOrder)
-        .expect(HttpStatus.BAD_REQUEST);
+        .expect(HttpStatus.CREATED);
+      // Validate all key in object are presents
+      const testElement: Order = body;
+      expect(testElement.id).toBe(2);
+      expect(testElement.uuid).toBeDefined();
+      console.log(testElement);
+    });
+  });
+
+  describe('GET /orders/{uuid} API', () => {
+    const orderUUID = 'UUID_TEST_ORDER';
+
+    it('[NOT-AUTHENTICATED] must return the order for a correct UUID', async () => {
+      const { body } = await request(httpServer)
+        .get(`/orders/${orderUUID}`)
+        .expect(HttpStatus.OK);
+
+      const testElem: Order = body;
+      expect(testElem.id).toBe(1);
+    });
+
+    it('[NOT-AUTHENTICATED] must return 404 if the UUID does not exists', (): request.Test => {
+      return request(httpServer)
+        .get('/orders?uuid=test')
+        .expect(HttpStatus.NOT_FOUND);
     });
   });
 });

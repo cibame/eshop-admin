@@ -7,6 +7,7 @@ import { UpdateOrderDto } from './dto/update-order.dto';
 import { OrderProduct } from './entities/order-product.entity';
 import { OrderUser } from './entities/order-user.entity';
 import { Order, OrderStatus } from './entities/order.entity';
+import uuid = require('uuid');
 
 @Injectable()
 export class OrdersService {
@@ -52,18 +53,20 @@ export class OrdersService {
     order.type = createOrderDto.type;
     order.user = user;
     order.status = OrderStatus.WaitingConfirmation;
+    order.uuid = uuid.v4();
 
     return await this._orderRepository.save(order);
   }
 
-  findAll() {
-    return this._orderRepository.find({
+  findOne(uuid: string) {
+    return this._orderRepository.findOne({
+      where: { uuid },
       relations: ['user', 'products', 'products.product'],
     });
   }
 
-  findOne(id: number) {
-    return this._orderRepository.findOne(id, {
+  findAll() {
+    return this._orderRepository.find({
       relations: ['user', 'products', 'products.product'],
     });
   }
