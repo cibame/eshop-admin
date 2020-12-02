@@ -58,14 +58,15 @@ export class OrdersService {
     return await this._orderRepository.save(order);
   }
 
-  findAll() {
-    return this._orderRepository.find({
+  findOne(uuid: string) {
+    return this._orderRepository.findOne({
+      where: { uuid },
       relations: ['user', 'products', 'products.product'],
     });
   }
 
-  findOne(id: number) {
-    return this._orderRepository.findOne(id, {
+  findAll() {
+    return this._orderRepository.find({
       relations: ['user', 'products', 'products.product'],
     });
   }
