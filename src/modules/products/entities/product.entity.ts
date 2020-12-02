@@ -24,17 +24,27 @@ export class Product extends BaseEntity {
   @ApiProperty({ readOnly: true })
   @PrimaryGeneratedColumn()
   id: number;
+
   @ApiProperty({ readOnly: true })
   @Column({ nullable: false })
   name: string;
+
   @ApiProperty({ readOnly: true })
   @Column({ nullable: true })
   detail: string;
+
+  @ApiProperty({ readOnly: true })
   @Column({ nullable: true })
   ingredients: string;
+
   @ApiProperty({ readOnly: true })
   @Column({ nullable: true })
   description: string;
+
+  @ApiProperty({ readOnly: true })
+  @Column({ default: true })
+  active: boolean;
+
   @ApiProperty({ readOnly: true })
   @Column({
     type: 'decimal',
@@ -42,9 +52,11 @@ export class Product extends BaseEntity {
     transformer: new ColumnNumericTransformer(),
   })
   price: number;
+
   @ApiProperty({ readOnly: true })
   @Column({ nullable: true })
   image: string;
+
   @ApiProperty({ readOnly: true, type: () => Category })
   @ManyToOne(
     () => Category,
@@ -52,6 +64,7 @@ export class Product extends BaseEntity {
     { eager: true },
   )
   category: Category;
+
   @CreateDateColumn()
   createdDate: Date;
   @UpdateDateColumn()
