@@ -21,7 +21,7 @@ AdminBro.registerAdapter({ Database, Resource });
     AdminModule.createAdminAsync({
       useFactory: () => ({
         adminBroOptions: {
-          rootPath: '/admin',
+          rootPath: '/',
           resources: [Product, Category, Order, OrderProduct, OrderUser],
         },
       }),
