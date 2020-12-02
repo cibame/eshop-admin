@@ -7,7 +7,7 @@ import {
   SendMailOptions,
 } from '../../../shared/mailer/mailer/mailer.provider';
 import { CreateOrderDto } from '../dto/create-order.dto';
-import { Order, OrderType } from '../entities/order.entity';
+import { Order, OrderStatus, OrderType } from '../entities/order.entity';
 import { OrdersModule } from '../orders.module';
 
 describe('Orders Module', () => {
@@ -132,6 +132,17 @@ describe('Orders Module', () => {
         }),
       );
     });
+
+    it('[NOT-AUTHENTICATED] must create an order in waiting-confirmation status ', async () => {
+      const { body } = await request(httpServer)
+        .post('/orders')
+        .send(newOrder)
+        .expect(HttpStatus.CREATED);
+      // Validate all key in object are presents
+      const testElement: Order = body;
+      expect(testElement.id).toBe(2);
+      expect(testElement.status).toBe(OrderStatus.WaitingConfirmation);
+    });
   });
 
   describe('GET /products API', () => {
@@ -159,5 +170,4 @@ describe('Orders Module', () => {
         .expect(HttpStatus.BAD_REQUEST);
     });
   });
-  
 });
