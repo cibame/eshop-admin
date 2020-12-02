@@ -6,7 +6,7 @@ import { CreateOrderDto } from './dto/create-order.dto';
 import { UpdateOrderDto } from './dto/update-order.dto';
 import { OrderProduct } from './entities/order-product.entity';
 import { OrderUser } from './entities/order-user.entity';
-import { Order } from './entities/order.entity';
+import { Order, OrderStatus } from './entities/order.entity';
 
 @Injectable()
 export class OrdersService {
@@ -51,6 +51,7 @@ export class OrdersService {
     order.products = products;
     order.type = createOrderDto.type;
     order.user = user;
+    order.status = OrderStatus.WaitingConfirmation;
 
     return await this._orderRepository.save(order);
   }
