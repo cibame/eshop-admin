@@ -7,6 +7,7 @@ import { UpdateOrderDto } from './dto/update-order.dto';
 import { OrderProduct } from './entities/order-product.entity';
 import { OrderUser } from './entities/order-user.entity';
 import { Order, OrderStatus } from './entities/order.entity';
+import uuid = require('uuid');
 
 @Injectable()
 export class OrdersService {
@@ -52,6 +53,7 @@ export class OrdersService {
     order.type = createOrderDto.type;
     order.user = user;
     order.status = OrderStatus.WaitingConfirmation;
+    order.uuid = uuid.v4();
 
     return await this._orderRepository.save(order);
   }
