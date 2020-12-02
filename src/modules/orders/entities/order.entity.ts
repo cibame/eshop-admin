@@ -1,5 +1,8 @@
 import { ApiProperty } from '@nestjs/swagger';
 import {
+  AfterInsert,
+  AfterLoad,
+  AfterUpdate,
   BaseEntity,
   Column,
   CreateDateColumn,
@@ -68,10 +71,23 @@ export class Order extends BaseEntity {
   )
   @ApiProperty({ type: () => OrderProduct, readOnly: true })
   products: OrderProduct[];
-  // TODO: add a total computed column
 
   @RelationId((order: Order) => order.user)
   userId: number;
+
+  @ApiProperty({ readOnly: true })
+  total = 0;
+
+  @AfterLoad()
+  @AfterInsert()
+  @AfterUpdate()
+  calculateTotal() {
+    const total = this.products?.reduce(
+      (acc, val) => acc + val.quantity * val.price,
+      0,
+    );
+    this.total = total;
+  }
 
   @CreateDateColumn()
   dateCreated: Date;
