@@ -84,6 +84,7 @@ describe('Orders Module', () => {
         newOrder.products[0].quantity,
       );
       expect(testElement.products[0].price).toBe(productPrice);
+      expect(testElement.total).toBe(30);
     });
 
     it('[NOT-AUTHENTICATED] must return 400 if one of the product does not exists ', (): request.Test => {
@@ -153,7 +154,6 @@ describe('Orders Module', () => {
       const testElement: Order = body;
       expect(testElement.id).toBe(2);
       expect(testElement.uuid).toBeDefined();
-      console.log(testElement);
     });
   });
 

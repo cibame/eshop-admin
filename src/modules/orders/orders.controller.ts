@@ -31,6 +31,7 @@ export class OrdersController {
   @UsePipes(OrderProductPipe)
   async create(@Body() createOrderDto: CreateOrderDto) {
     const order = await this.ordersService.create(createOrderDto);
+
     try {
       // TODO: e2e test this feature
       this.mailerProvider.send({
@@ -39,6 +40,7 @@ export class OrdersController {
         template: 'order',
         params: {
           order,
+          ecommerce_order_url: 'http://ecommerce.zeroezero.eu/order',
         },
       });
     } catch (err) {
