@@ -1,0 +1,6 @@
+{
+  "collection": "@nestjs/schematics",
+  "sourceRoot": "src",
+  "plugins": ["@nestjs/swagger"],
+  "entryPoint": "main-admin"
+}
