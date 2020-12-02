@@ -9,33 +9,40 @@ import {
   PrimaryGeneratedColumn,
   RelationId,
 } from 'typeorm';
-import { Product } from '../../products/entities/product.entity';
+import {
+  ColumnNumericTransformer,
+  Product,
+} from '../../products/entities/product.entity';
 import { Order } from './order.entity';
 
 @Entity()
 export class OrderProduct extends BaseEntity {
-  @PrimaryGeneratedColumn()
   @ApiProperty({ readOnly: true })
+  @PrimaryGeneratedColumn()
   id: number;
 
-  @Column({ type: 'int', nullable: false })
   @ApiProperty({ readOnly: true })
+  @Column({ type: 'int', nullable: false })
   quantity: number;
 
-  @Column({ type: 'decimal', nullable: false })
   @ApiProperty({ readOnly: true })
+  @Column({
+    type: 'decimal',
+    nullable: false,
+    transformer: new ColumnNumericTransformer(),
+  })
   price: number;
 
-  @ManyToOne(() => Product, null, {})
   @ApiProperty({ readOnly: true })
+  @ManyToOne(() => Product, null, {})
   product: Product;
 
+  @ApiProperty({ readOnly: true })
   @ManyToOne(
     () => Order,
     order => order.products,
   )
   @JoinColumn()
-  @ApiProperty({ readOnly: true })
   order: Order;
 
   // in order be able to fetch resources in admin-bro - we have to have id available
