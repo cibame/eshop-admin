@@ -6,6 +6,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import AdminBro from 'admin-bro';
 import { DatabaseType } from 'typeorm';
 import { PostgresConnectionOptions } from 'typeorm/driver/postgres/PostgresConnectionOptions';
+import { AdminController } from './admin-app/admin.controller';
 import { Category } from './modules/categories/entities/category.entity';
 import { OrderProduct } from './modules/orders/entities/order-product.entity';
 import { OrderUser } from './modules/orders/entities/order-user.entity';
@@ -22,7 +23,7 @@ AdminBro.registerAdapter({ Database, Resource });
       imports: [ConfigModule],
       useFactory: (configService: ConfigService) => ({
         adminBroOptions: {
-          rootPath: '/',
+          rootPath: '/admin',
           resources: [Product, Category, Order, OrderProduct, OrderUser],
         },
         auth: {
@@ -61,7 +62,7 @@ AdminBro.registerAdapter({ Database, Resource });
       inject: [ConfigService],
     }),
   ],
-  controllers: [],
+  controllers: [AdminController],
   providers: [],
 })
 export class AppAdminModule {}
