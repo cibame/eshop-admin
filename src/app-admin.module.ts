@@ -24,23 +24,54 @@ AdminBro.registerAdapter({ Database, Resource });
       useFactory: (configService: ConfigService) => ({
         adminBroOptions: {
           rootPath: '/admin',
-          resources: [Product, Category, Order, OrderProduct, OrderUser],
+          resources: [
+            {
+              resource: Product,
+              options: {
+                listProperties: [
+                  'name',
+                  'detail',
+                  'ingredients',
+                  'description',
+                  'price',
+                ],
+              },
+            },
+            {
+              resource: Category,
+              options: { listProperties: ['name', 'description'] },
+            },
+            {
+              resource: Order,
+              options: {
+                listProperties: [
+                  'userId',
+                  'note',
+                  'type',
+                  'status',
+                  'dateCreated',
+                ],
+              },
+            },
+            { resource: OrderProduct },
+            { resource: OrderUser },
+          ],
         },
-        auth: {
-          authenticate: async (email, password) => {
-            const adminEmail = configService.get<string>('ADMIN_EMAIL');
-            const adminPass = configService.get<string>('ADMIN_PASS');
-            if (email !== adminEmail || password !== adminPass) {
-              return Promise.resolve(null);
-            }
+        // auth: {
+        //   authenticate: async (email, password) => {
+        //     const adminEmail = configService.get<string>('ADMIN_EMAIL');
+        //     const adminPass = configService.get<string>('ADMIN_PASS');
+        //     if (email !== adminEmail || password !== adminPass) {
+        //       return Promise.resolve(null);
+        //     }
 
-            return Promise.resolve({
-              email: configService.get<string>('ADMIN_EMAIL'),
-            });
-          },
-          cookieName: 'admin_name',
-          cookiePassword: 'admin_password',
-        },
+        //     return Promise.resolve({
+        //       email: configService.get<string>('ADMIN_EMAIL'),
+        //     });
+        //   },
+        //   cookieName: 'admin_name',
+        //   cookiePassword: 'admin_password',
+        // },
       }),
       inject: [ConfigService],
     }),
