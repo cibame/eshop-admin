@@ -32,6 +32,7 @@ export class OrdersController {
   async create(@Body() createOrderDto: CreateOrderDto) {
     const order = await this.ordersService.create(createOrderDto);
 
+    // // Send email to client
     try {
       // TODO: e2e test this feature
       this.mailerProvider.send({
@@ -41,6 +42,23 @@ export class OrdersController {
         params: {
           order,
           ecommerce_order_url: 'http://ecommerce.zeroezero.eu/order',
+        },
+      });
+    } catch (err) {
+      //TODO: handle error better
+
+      console.error(err);
+    }
+
+    // Send email to admin
+    try {
+      // TODO: e2e test this feature
+      this.mailerProvider.send({
+        to: this.configService.get<string>('SHOP_EMAIL'),
+        subject: 'Nuovo ordine',
+        template: 'order-admin',
+        params: {
+          order,
         },
       });
     } catch (err) {

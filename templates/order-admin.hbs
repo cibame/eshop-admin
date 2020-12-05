@@ -1,0 +1,21 @@
+<h2>Nuovo Ordine</h2>
+
+<h3>Prodotti nell'ordine</h3>
+<ul>
+    {{#each order.products}}
+    <li>Prodotto: {{this.product.name}} - {{this.quantity}} pezzi - Prezzo (singolo): {{this.price}}€</li>
+    {{/each}}
+</ul>
+
+<h4>Totale dell'ordine: {{order.total}}€</h4>
+
+<h2>Informazioni Consegna</h2>
+<ul>
+    <li> <b>Nome</b>: {{order.user.firstName}} {{order.user.lastName}}
+    <li> <b>Email</b>: {{order.user.email}}
+    <li> <b>Indirizzo</b>: {{order.user.address}}
+    <li> <b>Telefono</b>: {{order.user.telephone}}
+</ul>
+
+<b>Data Ordine</b>: {{order.dateCreated}}
+<b>Tipologia Ordine</b>: {{order.type}}

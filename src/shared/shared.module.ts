@@ -9,6 +9,7 @@ import { MailerProvider } from './mailer/mailer/mailer.provider';
     ConfigModule,
     MailerModule.forRootAsync({
       imports: [ConfigModule],
+      // TODO: find a good email catcher for this service
       useFactory: (configService: ConfigService) => {
         return {
           transport: {
@@ -23,6 +24,10 @@ import { MailerProvider } from './mailer/mailer/mailer.provider';
           defaults: {
             from: configService.get<string>('SHOP_EMAIL'),
           },
+          preview:
+            configService.get<string>('NODE_ENV') === 'production'
+              ? false
+              : true,
           template: {
             dir: process.cwd() + '/templates',
             adapter: new HandlebarsAdapter(),
