@@ -34,15 +34,17 @@ export class OrderProduct extends BaseEntity {
   price: number;
 
   @ApiProperty({ readOnly: true })
-  @ManyToOne(() => Product, null, {})
+  @ManyToOne(() => Product, null, { eager: true })
+  @JoinColumn({ name: 'productId' })
   product: Product;
 
   @ApiProperty({ readOnly: true })
   @ManyToOne(
     () => Order,
     order => order.products,
+    { onDelete: 'CASCADE' },
   )
-  @JoinColumn()
+  @JoinColumn({ name: 'orderId' })
   order: Order;
 
   // in order be able to fetch resources in admin-bro - we have to have id available
