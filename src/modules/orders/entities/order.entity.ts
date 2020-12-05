@@ -26,6 +26,7 @@ export enum OrderStatus {
   WaitingConfirmation = 'waiting-confirmation',
   Confirmed = 'confirmed',
   Cancelled = 'cancelled',
+  Delivered = 'delivered',
 }
 
 @Entity()
@@ -68,6 +69,7 @@ export class Order extends BaseEntity {
   @OneToMany(
     () => OrderProduct,
     product => product.order,
+    { eager: true },
   )
   @ApiProperty({ type: () => OrderProduct, readOnly: true })
   products: OrderProduct[];
