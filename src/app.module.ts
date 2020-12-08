@@ -15,6 +15,7 @@ import { SharedModule } from './shared/shared.module';
     TypeOrmModule.forRootAsync({
       imports: [ConfigModule],
       useFactory: (configService: ConfigService) => {
+        console.log(__dirname + '/migration/*.{.ts,.js}');
         return {
           type: configService.get<DatabaseType>('DB_TYPE'),
           host: configService.get<string>('DB_HOST'),
@@ -23,7 +24,9 @@ import { SharedModule } from './shared/shared.module';
           password: configService.get<string>('DB_PASSWORD'),
           database: configService.get<string>('DB_DATABASE'),
           entities: [__dirname + '/**/*.entity{.ts,.js}'],
-          synchronize: true,
+          migrations: [__dirname + '/migration/*{.ts,.js}'],
+          migrationsRun: true,
+          logging: ['info', 'log', 'migration'],
         } as PostgresConnectionOptions;
       },
       inject: [ConfigService],
