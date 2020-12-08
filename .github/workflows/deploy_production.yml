@@ -1,9 +1,8 @@
 name: Deploy to production
 
 on:
-  push:
-    branches:
-      - develop
+  release:
+    types: [published]
 
 jobs:
   deploy-api:
@@ -118,4 +117,4 @@ jobs:
         with:
           token: ${{ secrets.DISPATCH_PAT }}
           repository: pablosproject/eshop-devops
-          event-type: package-published-dev
+          event-type: package-published-master
