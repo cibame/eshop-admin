@@ -3,5 +3,25 @@ items:
   product{1..10}:
     name: '{{commerce.productName}}'
     description: '{{lorem.paragraph}}'
-    price: '{{commerce.price}}'
+    ingredients: '{{lorem.paragraph}}'
+    price: 15.5
     image: '{{image.image}}'
+    category: '@category*'
+  # Product Related to Test Order
+  product-order1:
+    id: 1
+    name: 'Prodotto Test Ordine 1'
+    description: '{{lorem.paragraph}}'
+    ingredients: '{{lorem.paragraph}}'
+    price: 10
+    image: '{{image.image}}'
+    category: '@category1'
+  product-order2:
+    id: 2
+    name: 'Prodotto Test Ordine 2'
+    detail: '25 cl'
+    description: '{{lorem.paragraph}}'
+    ingredients: '{{lorem.paragraph}}'
+    price: 5
+    image: '{{image.image}}'
+    category: '@category2'

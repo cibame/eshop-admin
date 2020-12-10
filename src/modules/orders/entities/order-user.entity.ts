@@ -1,18 +1,40 @@
-import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import { ApiProperty } from '@nestjs/swagger';
+import {
+  BaseEntity,
+  Column,
+  CreateDateColumn,
+  Entity,
+  PrimaryGeneratedColumn,
+} from 'typeorm';
 
 @Entity()
-export class OrderUser {
+export class OrderUser extends BaseEntity {
   @PrimaryGeneratedColumn()
+  @ApiProperty({ readOnly: true })
   id: number;
-  @Column({ name: 'first_name' })
+
+  @Column()
+  @ApiProperty({ readOnly: true })
   firstName: string;
-  @Column({ nullable: false })
-  @Column({ name: 'last_name' })
+
+  @Column()
+  @ApiProperty({ readOnly: true })
   lastName: string;
+
   @Column({ nullable: false })
+  @ApiProperty({ readOnly: true })
   email: string;
+
   @Column()
+  @ApiProperty({ readOnly: true })
   address: string;
+
   @Column()
+  @ApiProperty({ readOnly: true })
   telephone: string;
+
+  @CreateDateColumn()
+  dateCreated: Date;
+  @CreateDateColumn()
+  dateUpdated: Date;
 }

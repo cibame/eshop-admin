@@ -1,8 +1,8 @@
-entity: OrderUser
-  items:
-    paolo: 
-      firstName
-lastName
-email
-address
-telephone
+entity: Order
+items:
+  order1:
+    id: 1
+    note: 'Note allegate ordine 1'
+    type: 'pickup'
+    user: '@order-user1'
+    uuid: UUID_TEST_ORDER

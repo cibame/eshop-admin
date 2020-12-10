@@ -1,13 +1,36 @@
+# Used for local development and tests
 version: '3.3'
 
 services:
-  db:
+  postgres:
     image: postgres
-    container_name: db
+    container_name: eshop-db
     restart: unless-stopped
     ports:
       - 5432:5432
     environment:
       POSTGRES_DB: eshop
+      POSTGRES_USER: root
+      POSTGRES_PASSWORD: root
+
+  pgweb:
+    container_name: eshop-pgweb
+    restart: always
+    image: sosedoff/pgweb
+    ports:
+      - '8081:8081'
+    environment:
+      - DATABASE_URL=postgres://root:root@postgres:5432/postgres?sslmode=disable
+    depends_on:
+      - postgres
+
+  test-db:
+    image: postgres
+    container_name: eshop-test-db
+    restart: unless-stopped
+    ports:
+      - 5433:5432
+    environment:
+      POSTGRES_DB: test
       POSTGRES_USER: root
       POSTGRES_PASSWORD: root

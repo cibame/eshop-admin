@@ -8,6 +8,8 @@ import {
   Put,
   Req,
   UseGuards,
+  UsePipes,
+  ValidationPipe,
 } from '@nestjs/common';
 import { ApiResponse, ApiTags } from '@nestjs/swagger';
 import { CreateProductDto } from './dto/create-product.dto';
@@ -17,14 +19,10 @@ import { ProductGuard } from './guard/product.guard';
 import { ProductsService } from './products.service';
 
 @Controller('products')
-@ApiTags('Products')
+@ApiTags('products')
+@UsePipes(new ValidationPipe({ transform: true, whitelist: true }))
 export class ProductsController {
   constructor(private readonly productsService: ProductsService) {}
-
-  @Post()
-  create(@Body() createProductDto: CreateProductDto) {
-    return this.productsService.create(createProductDto);
-  }
 
   @Get()
   @ApiResponse({ type: Product, isArray: true })
@@ -37,6 +35,18 @@ export class ProductsController {
   @ApiResponse({ type: Product })
   findOne(@Param('id') _: string, @Req() req): Promise<Product> {
     return req.product;
+  }
+}
+
+/**
+ * Hidden class to hide some of the features for the first release of the platform
+ */
+export class HideProducts {
+  constructor(private readonly productsService: ProductsService) {}
+
+  @Post()
+  create(@Body() createProductDto: CreateProductDto) {
+    return this.productsService.create(createProductDto);
   }
 
   @Put(':id')

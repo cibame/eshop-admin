@@ -34,7 +34,7 @@ Password: `root`
 
 ### Test Data
 
-To load test data run: `npx fixtures -s -d fixtures`
+To load test data run: `npx fixtures -s -d test/fixtures`
 
 ## Installation
 
