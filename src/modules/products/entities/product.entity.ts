@@ -1,24 +1,72 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import {
+  BaseEntity,
+  Column,
+  CreateDateColumn,
+  Entity,
+  ManyToOne,
+  PrimaryGeneratedColumn,
+  UpdateDateColumn,
+} from 'typeorm';
+import { Category } from '../../categories/entities/category.entity';
+
+export class ColumnNumericTransformer {
+  to(data: number): number {
+    return data;
+  }
+  from(data: string): number {
+    return parseFloat(data);
+  }
+}
 
 @Entity()
-export class Product {
+export class Product extends BaseEntity {
   @ApiProperty({ readOnly: true })
   @PrimaryGeneratedColumn()
   id: number;
+
   @ApiProperty({ readOnly: true })
   @Column({ nullable: false })
   name: string;
+
+  @ApiProperty({ readOnly: true })
+  @Column({ nullable: true })
+  detail: string;
+
+  @ApiProperty({ readOnly: true })
+  @Column({ nullable: true })
+  ingredients: string;
+
   @ApiProperty({ readOnly: true })
   @Column({ nullable: true })
   description: string;
+
   @ApiProperty({ readOnly: true })
-  @Column({ type: 'decimal', nullable: false })
+  @Column({ default: true })
+  active: boolean;
+
+  @ApiProperty({ readOnly: true })
+  @Column({
+    type: 'decimal',
+    nullable: false,
+    transformer: new ColumnNumericTransformer(),
+  })
   price: number;
+
   @ApiProperty({ readOnly: true })
   @Column({ nullable: true })
   image: string;
 
-  // TODO: create category and setup relation
-  // category:
+  @ApiProperty({ readOnly: true, type: () => Category })
+  @ManyToOne(
+    () => Category,
+    category => category.products,
+    { eager: true },
+  )
+  category: Category;
+
+  @CreateDateColumn()
+  createdDate: Date;
+  @UpdateDateColumn()
+  updateddDate: Date;
 }

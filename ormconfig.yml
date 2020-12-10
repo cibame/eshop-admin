@@ -1,3 +1,4 @@
+# Development fixture ORMConfig
 default:
   type: 'postgres'
   host: 'localhost'

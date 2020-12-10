@@ -1,0 +1,30 @@
+<h1>Grazie per il tuo ordine</h1>
+
+<p>A breve verrai ricontattato per la conferma dell'ordine.</p>
+
+Ecco i dettagli del tuo ordine:
+<ul>
+    {{#each order.products}}
+    <li>Prodotto: {{this.product.name}} - {{this.quantity}} pezzi - Prezzo (singolo): {{this.price}}€</li>
+    {{/each}}
+</ul>
+
+<h4>Totale dell'ordine: {{order.total}}€</h4>
+{{!-- Totale dell'ordine --}}
+
+<p>
+    Ricordiamo che tutti gli ordini sono da ritenersi validi solamente a seguito di <b>conferma</b>.
+</p>
+
+<p>Se avete fatto un ordine take-away, di seguito potete trovare indicazione sui giorni previsti per la consegna sulle
+    varie zone:</p>
+{{!-- TODO:Controlla HTTPS --}}
+<p><a href="http://ecommerce.zeroezero.eu/assets/ordinizero.pdf"
+        target="_blank">Scarica informazioni di consegna</a></p>
+
+<h6> Stato dell'ordine </h6>
+<p><a href="{{ecommerce_order_url}}/{{order.uuid}}"
+        target="_blank">Qui puoi seguire lo stato dell'ordine</a></p>
+
+<p>Per qualsiasi informazione potete contattarci telefonicamente allo <b><a href="tel:+393651904404">03651904404</a></b>
+    oppure <b><a href="mailto:info@zeroezero.eu">info@zeroezero.eu</a></b>.</p>
