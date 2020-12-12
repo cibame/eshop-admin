@@ -1,4 +1,5 @@
 import {
+  BadRequestException,
   Body,
   Controller,
   Delete,
@@ -12,6 +13,7 @@ import {
   ValidationPipe,
 } from '@nestjs/common';
 import { ApiResponse, ApiTags } from '@nestjs/swagger';
+import { CategoriesService } from '../categories/categories.service';
 import { CreateProductDto } from './dto/create-product.dto';
 import { UpdateProductDto } from './dto/update-product.dto';
 import { Product } from './entities/product.entity';
@@ -22,7 +24,10 @@ import { ProductsService } from './products.service';
 @ApiTags('products')
 @UsePipes(new ValidationPipe({ transform: true, whitelist: true }))
 export class ProductsController {
-  constructor(private readonly productsService: ProductsService) {}
+  constructor(
+    private readonly productsService: ProductsService,
+    private readonly categoryService: CategoriesService,
+  ) {}
 
   @Get()
   @ApiResponse({ type: Product, isArray: true })
@@ -36,26 +41,41 @@ export class ProductsController {
   findOne(@Param('id') _: string, @Req() req): Promise<Product> {
     return req.product;
   }
-}
-
-/**
- * Hidden class to hide some of the features for the first release of the platform
- */
-export class HideProducts {
-  constructor(private readonly productsService: ProductsService) {}
 
   @Post()
-  create(@Body() createProductDto: CreateProductDto) {
+  async create(@Body() createProductDto: CreateProductDto) {
+    if (
+      createProductDto.categoryId &&
+      !(await this.categoryService.findOne(createProductDto.categoryId))
+    ) {
+      throw new BadRequestException(
+        `Category ${createProductDto.categoryId} does not exists`,
+      );
+    }
+
     return this.productsService.create(createProductDto);
   }
 
   @Put(':id')
   @UseGuards(ProductGuard)
-  @ApiResponse({ type: Product })
-  update(
+  @ApiResponse({
+    type: Product,
+    description:
+      'In order to remove an existing category, expicitly set "categoryID" to null ',
+  })
+  async update(
     @Param('id') id: string,
     @Body() updateProductDto: UpdateProductDto,
   ): Promise<Product> {
+    if (
+      updateProductDto.categoryId &&
+      !(await this.categoryService.findOne(updateProductDto.categoryId))
+    ) {
+      throw new BadRequestException(
+        `Category ${updateProductDto.categoryId} does not exists`,
+      );
+    }
+
     return this.productsService.update(+id, updateProductDto);
   }
 

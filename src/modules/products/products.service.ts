@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
+import { Category } from '../categories/entities/category.entity';
 import { CreateProductDto } from './dto/create-product.dto';
 import { UpdateProductDto } from './dto/update-product.dto';
 import { Product } from './entities/product.entity';
@@ -10,10 +11,16 @@ export class ProductsService {
   constructor(
     @InjectRepository(Product)
     private readonly productRepository: Repository<Product>,
+    @InjectRepository(Category)
+    private readonly categoryRepository: Repository<Category>,
   ) {}
 
   async create(createProductDto: CreateProductDto) {
+    const category = createProductDto.categoryId
+      ? await this.categoryRepository.findOne(createProductDto.categoryId)
+      : null;
     const product = this.productRepository.create(createProductDto);
+    product.category = category;
     return await this.productRepository.save(product);
   }
 
@@ -34,10 +41,20 @@ export class ProductsService {
       id,
       ...updateProductDto,
     });
+
+    if (updateProductDto.categoryId) {
+      const category = await this.categoryRepository.findOne(
+        updateProductDto.categoryId,
+      );
+      product.category = category;
+    } else if (updateProductDto.categoryId === null) {
+      product.category = null;
+    }
+
     return await this.productRepository.save(product);
   }
 
   async remove(id: number): Promise<void> {
-    await this.productRepository.delete(id);
+    await this.productRepository.softDelete(id);
   }
 }

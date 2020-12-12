@@ -1,18 +1,29 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsBase64, IsNumber, IsString, Min } from 'class-validator';
+import { IsBase64, IsNumber, IsOptional, IsString, Min } from 'class-validator';
 
 export class CreateProductDto {
   @ApiProperty()
   @IsString()
   name: string;
   @ApiProperty()
+  @IsOptional()
   @IsString()
-  description: string;
+  description?: string;
+  @ApiProperty()
+  @IsString()
+  @IsOptional()
+  ingredients?: string;
   @ApiProperty()
   @IsNumber()
   @Min(0)
   price: number;
+  @ApiProperty({})
+  @IsNumber()
+  @IsOptional()
+  @Min(0)
+  categoryId?: number;
   @ApiProperty()
   @IsBase64()
-  image: string;
+  @IsOptional()
+  image?: string;
 }
