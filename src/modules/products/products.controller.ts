@@ -1,4 +1,5 @@
 import {
+  BadRequestException,
   Body,
   Controller,
   Delete,
@@ -12,6 +13,7 @@ import {
   ValidationPipe,
 } from '@nestjs/common';
 import { ApiResponse, ApiTags } from '@nestjs/swagger';
+import { CategoriesService } from '../categories/categories.service';
 import { CreateProductDto } from './dto/create-product.dto';
 import { UpdateProductDto } from './dto/update-product.dto';
 import { Product } from './entities/product.entity';
@@ -22,7 +24,10 @@ import { ProductsService } from './products.service';
 @ApiTags('products')
 @UsePipes(new ValidationPipe({ transform: true, whitelist: true }))
 export class ProductsController {
-  constructor(private readonly productsService: ProductsService) {}
+  constructor(
+    private readonly productsService: ProductsService,
+    private readonly categoryService: CategoriesService,
+  ) {}
 
   @Get()
   @ApiResponse({ type: Product, isArray: true })
@@ -36,6 +41,21 @@ export class ProductsController {
   findOne(@Param('id') _: string, @Req() req): Promise<Product> {
     return req.product;
   }
+
+  @Post()
+  async create(@Body() createProductDto: CreateProductDto) {
+    if (
+      createProductDto.categoryId &&
+      !(await this.categoryService.findOne(createProductDto.categoryId))
+    ) {
+      throw new BadRequestException(
+        `Category ${createProductDto.categoryId} does not exists`,
+      );
+    }
+
+    // TODO: extract and validate category
+    return this.productsService.create(createProductDto);
+  }
 }
 
 /**
@@ -43,11 +63,6 @@ export class ProductsController {
  */
 export class HideProducts {
   constructor(private readonly productsService: ProductsService) {}
-
-  @Post()
-  create(@Body() createProductDto: CreateProductDto) {
-    return this.productsService.create(createProductDto);
-  }
 
   @Put(':id')
   @UseGuards(ProductGuard)
