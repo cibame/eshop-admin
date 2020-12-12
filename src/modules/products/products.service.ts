@@ -41,7 +41,7 @@ export class ProductsService {
       id,
       ...updateProductDto,
     });
-    
+
     if (updateProductDto.categoryId) {
       const category = await this.categoryRepository.findOne(
         updateProductDto.categoryId,
@@ -50,11 +50,11 @@ export class ProductsService {
     } else if (updateProductDto.categoryId === null) {
       product.category = null;
     }
-    
+
     return await this.productRepository.save(product);
   }
 
   async remove(id: number): Promise<void> {
-    await this.productRepository.delete(id);
+    await this.productRepository.softDelete(id);
   }
 }

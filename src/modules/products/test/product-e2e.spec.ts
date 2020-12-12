@@ -24,21 +24,19 @@ describe('Products Module', () => {
   });
 
   describe('GET /products API', () => {
-    it('[NOT-AUTHENTICATED] must return all products ', () => {
-      return request(httpServer)
+    it('[NOT-AUTHENTICATED] must return all products ', async () => {
+      const { body } = await request(httpServer)
         .get('/products')
-        .expect(HttpStatus.OK)
-        .then(({ body }) => {
-          expect(body.length).toEqual(12);
-          // Validate all key in object are presents
-          const testElement: Product = body[0];
-          expect(testElement.id).not.toBeNull();
-          expect(testElement.name).not.toBeNull();
-          expect(testElement.description).not.toBeNull();
-          expect(testElement.price).not.toBeNull();
-          expect(testElement.image).not.toBeNull();
-          expect(testElement.active).toBeTruthy();
-        });
+        .expect(HttpStatus.OK);
+      expect(body.length).toEqual(12);
+      // Validate all key in object are presents
+      const testElement: Product = body[0];
+      expect(testElement.id).not.toBeNull();
+      expect(testElement.name).not.toBeNull();
+      expect(testElement.description).not.toBeNull();
+      expect(testElement.price).not.toBeNull();
+      expect(testElement.image).not.toBeNull();
+      expect(testElement.active).toBeTruthy();
     });
   });
 
@@ -146,6 +144,25 @@ describe('Products Module', () => {
       await request(httpServer)
         .put('/products/999')
         .send(product)
+        .expect(HttpStatus.NOT_FOUND);
+    });
+  });
+
+  describe('DELETE /products API', () => {
+    it('must delete a product', async () => {
+      await request(httpServer)
+        .delete('/products/1')
+        .expect(HttpStatus.OK);
+
+      const { body } = await request(httpServer)
+        .get('/products')
+        .expect(HttpStatus.OK);
+      expect(body.length).toEqual(11);
+    });
+
+    it('must return 404 on not existing product', async () => {
+      await request(httpServer)
+        .delete('/products/999')
         .expect(HttpStatus.NOT_FOUND);
     });
   });

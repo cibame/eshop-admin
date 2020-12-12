@@ -78,13 +78,6 @@ export class ProductsController {
 
     return this.productsService.update(+id, updateProductDto);
   }
-}
-
-/**
- * Hidden class to hide some of the features for the first release of the platform
- */
-export class HideProducts {
-  constructor(private readonly productsService: ProductsService) {}
 
   @Delete(':id')
   @UseGuards(ProductGuard)
