@@ -41,6 +41,16 @@ export class ProductsService {
       id,
       ...updateProductDto,
     });
+    
+    if (updateProductDto.categoryId) {
+      const category = await this.categoryRepository.findOne(
+        updateProductDto.categoryId,
+      );
+      product.category = category;
+    } else if (updateProductDto.categoryId === null) {
+      product.category = null;
+    }
+    
     return await this.productRepository.save(product);
   }
 

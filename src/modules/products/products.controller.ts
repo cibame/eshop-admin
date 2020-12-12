@@ -53,8 +53,30 @@ export class ProductsController {
       );
     }
 
-    // TODO: extract and validate category
     return this.productsService.create(createProductDto);
+  }
+
+  @Put(':id')
+  @UseGuards(ProductGuard)
+  @ApiResponse({
+    type: Product,
+    description:
+      'In order to remove an existing category, expicitly set "categoryID" to null ',
+  })
+  async update(
+    @Param('id') id: string,
+    @Body() updateProductDto: UpdateProductDto,
+  ): Promise<Product> {
+    if (
+      updateProductDto.categoryId &&
+      !(await this.categoryService.findOne(updateProductDto.categoryId))
+    ) {
+      throw new BadRequestException(
+        `Category ${updateProductDto.categoryId} does not exists`,
+      );
+    }
+
+    return this.productsService.update(+id, updateProductDto);
   }
 }
 
@@ -63,16 +85,6 @@ export class ProductsController {
  */
 export class HideProducts {
   constructor(private readonly productsService: ProductsService) {}
-
-  @Put(':id')
-  @UseGuards(ProductGuard)
-  @ApiResponse({ type: Product })
-  update(
-    @Param('id') id: string,
-    @Body() updateProductDto: UpdateProductDto,
-  ): Promise<Product> {
-    return this.productsService.update(+id, updateProductDto);
-  }
 
   @Delete(':id')
   @UseGuards(ProductGuard)
