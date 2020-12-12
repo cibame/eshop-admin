@@ -3,6 +3,7 @@ import {
   BaseEntity,
   Column,
   CreateDateColumn,
+  DeleteDateColumn,
   Entity,
   ManyToOne,
   PrimaryGeneratedColumn,
@@ -69,4 +70,6 @@ export class Product extends BaseEntity {
   createdDate: Date;
   @UpdateDateColumn()
   updateddDate: Date;
+  @DeleteDateColumn()
+  deletedDate: Date;
 }
