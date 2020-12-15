@@ -7,37 +7,47 @@ import {
   Param,
   Post,
   Put,
+  Query,
   Req,
   UseGuards,
   UsePipes,
-  ValidationPipe,
+  ValidationPipe
 } from '@nestjs/common';
-import { ApiResponse, ApiTags } from '@nestjs/swagger';
-import { CategoriesService } from '../categories/categories.service';
-import { CreateProductDto } from './dto/create-product.dto';
-import { UpdateProductDto } from './dto/update-product.dto';
-import { Product } from './entities/product.entity';
-import { ProductGuard } from './guard/product.guard';
-import { ProductsService } from './products.service';
+import {ApiResponse, ApiTags} from '@nestjs/swagger';
+import {ListQuery} from '../../shared/service/paginate/model/list-query.model';
+import {CategoriesService} from '../categories/categories.service';
+import {CreateProductDto} from './dto/create-product.dto';
+import {UpdateProductDto} from './dto/update-product.dto';
+import {Product} from './entities/product.entity';
+import {ProductGuard} from './guard/product.guard';
+import {ProductPaginatedList} from './model/product-paginated-list.model';
+import {ProductsService} from './products.service';
 
 @Controller('products')
 @ApiTags('products')
-@UsePipes(new ValidationPipe({ transform: true, whitelist: true }))
+@UsePipes(new ValidationPipe({transform: true, whitelist: true}))
 export class ProductsController {
   constructor(
     private readonly productsService: ProductsService,
-    private readonly categoryService: CategoriesService,
-  ) {}
+    private readonly categoryService: CategoriesService
+  ) {
+  }
 
   @Get()
-  @ApiResponse({ type: Product, isArray: true })
+  @ApiResponse({type: Product, isArray: true})
   findAll(): Promise<Product[]> {
     return this.productsService.findAll();
   }
 
+  @Get('/paginated')
+  @ApiResponse({type: ProductPaginatedList})
+  findPaginated(@Query() query: ListQuery): Promise<ProductPaginatedList> {
+    return this.productsService.findAll(query);
+  }
+
   @Get(':id')
   @UseGuards(ProductGuard)
-  @ApiResponse({ type: Product })
+  @ApiResponse({type: Product})
   findOne(@Param('id') _: string, @Req() req): Promise<Product> {
     return req.product;
   }
@@ -49,7 +59,7 @@ export class ProductsController {
       !(await this.categoryService.findOne(createProductDto.categoryId))
     ) {
       throw new BadRequestException(
-        `Category ${createProductDto.categoryId} does not exists`,
+        `Category ${createProductDto.categoryId} does not exists`
       );
     }
 
@@ -61,18 +71,18 @@ export class ProductsController {
   @ApiResponse({
     type: Product,
     description:
-      'In order to remove an existing category, expicitly set "categoryID" to null ',
+      'In order to remove an existing category, expicitly set "categoryID" to null '
   })
   async update(
     @Param('id') id: string,
-    @Body() updateProductDto: UpdateProductDto,
+    @Body() updateProductDto: UpdateProductDto
   ): Promise<Product> {
     if (
       updateProductDto.categoryId &&
       !(await this.categoryService.findOne(updateProductDto.categoryId))
     ) {
       throw new BadRequestException(
-        `Category ${updateProductDto.categoryId} does not exists`,
+        `Category ${updateProductDto.categoryId} does not exists`
       );
     }
 
