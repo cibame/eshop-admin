@@ -1,10 +1,13 @@
-import { Injectable } from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
-import { Category } from '../categories/entities/category.entity';
-import { CreateProductDto } from './dto/create-product.dto';
-import { UpdateProductDto } from './dto/update-product.dto';
-import { Product } from './entities/product.entity';
+import {Injectable} from '@nestjs/common';
+import {InjectRepository} from '@nestjs/typeorm';
+import {Repository} from 'typeorm';
+import {ListQuery} from '../../shared/service/paginate/model/list-query.model';
+import {PaginateService} from '../../shared/service/paginate/paginate.service';
+import {Category} from '../categories/entities/category.entity';
+import {CreateProductDto} from './dto/create-product.dto';
+import {UpdateProductDto} from './dto/update-product.dto';
+import {Product} from './entities/product.entity';
+import {ProductPaginatedList} from './model/product-paginated-list.model';
 
 @Injectable()
 export class ProductsService {
@@ -13,7 +16,9 @@ export class ProductsService {
     private readonly productRepository: Repository<Product>,
     @InjectRepository(Category)
     private readonly categoryRepository: Repository<Category>,
-  ) {}
+    private readonly paginate: PaginateService
+  ) {
+  }
 
   async create(createProductDto: CreateProductDto) {
     const category = createProductDto.categoryId
@@ -24,7 +29,18 @@ export class ProductsService {
     return await this.productRepository.save(product);
   }
 
-  findAll(): Promise<Product[]> {
+  findAll(): Promise<Product[]>;
+  findAll(query: ListQuery): Promise<ProductPaginatedList>;
+
+  async findAll(listQuery?: ListQuery): Promise<Product[] | ProductPaginatedList> {
+    if (listQuery) {
+      return this.paginate.findAndPaginate(
+        listQuery,
+        this.productRepository,
+        ['name', 'description', 'ingredients', 'category.name', 'category.description'],
+        ['category']
+      );
+    }
     return this.productRepository.find();
   }
 
@@ -39,14 +55,13 @@ export class ProductsService {
   async update(id: number, updateProductDto: UpdateProductDto) {
     const product = await this.productRepository.preload({
       id,
-      ...updateProductDto,
+      ...updateProductDto
     });
 
     if (updateProductDto.categoryId) {
-      const category = await this.categoryRepository.findOne(
-        updateProductDto.categoryId,
+      product.category = await this.categoryRepository.findOne(
+        updateProductDto.categoryId
       );
-      product.category = category;
     } else if (updateProductDto.categoryId === null) {
       product.category = null;
     }
