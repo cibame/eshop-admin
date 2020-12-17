@@ -30,10 +30,10 @@ export class ListQuery {
   readonly sort?: string;
 
   @IsOptional()
-  @IsIn(['ASC', 'DESC'])
+  @IsIn(['ASC', 'DESC', 'asc', 'desc'])
   @ApiModelProperty({
     required: false,
-    enum: ['ASC', 'DESC']
+    enum: ['ASC', 'DESC', 'asc', 'desc']
   })
   readonly sortOrder: string;
 }
