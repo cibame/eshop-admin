@@ -1,5 +1,5 @@
 import {Injectable} from '@nestjs/common';
-import {FindManyOptions, Repository} from 'typeorm';
+import {Repository} from 'typeorm';
 import {ListQuery} from './model/list-query.model';
 import {PaginatedList} from './model/paginated-list.model';
 
@@ -34,19 +34,16 @@ export class PaginateService {
       where += (')');
     });
 
+    const queryBuilder = repository.createQueryBuilder(this.baseAlias)
+      .where(where)
+      .take(pageSize)
+      .skip(page * pageSize)
+      .orderBy(sort.indexOf('.') < 0 ? this.baseAlias + '.' + sort : sort, sortOrder);
+
     // build join clause
-    const leftJoin = {};
-    relations.forEach(relation => leftJoin[relation] = this.baseAlias + '.' + relation);
+    relations.forEach(relation => queryBuilder.leftJoinAndSelect(this.baseAlias + '.' + relation, relation));
 
-    const options: FindManyOptions = {
-      where,
-      order: {[sort]: sortOrder},
-      take: pageSize,
-      skip: page * pageSize,
-      join: {alias: this.baseAlias, leftJoin}
-    };
-
-    const [items, totalItems] = await repository.findAndCount(options);
+    const [items, totalItems] = await queryBuilder.getManyAndCount();
 
     return {
       items,
