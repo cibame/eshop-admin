@@ -22,7 +22,7 @@ export class ProductGuard implements CanActivate {
       throw new NotFoundException(`Product with id ${id} does not exits`);
     }
 
-    request.article = product;
+    request.product = product;
     return true;
   }
 }

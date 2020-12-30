@@ -61,7 +61,7 @@ export class ProductsController {
   @ApiResponse({
     type: Product,
     description:
-      'In order to remove an existing category, expicitly set "categoryID" to null ',
+      'In order to remove an existing category, explicitly set "categoryID" to null ',
   })
   async update(
     @Param('id') id: string,
