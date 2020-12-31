@@ -3,6 +3,7 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { DatabaseType } from 'typeorm';
 import { PostgresConnectionOptions } from 'typeorm/driver/postgres/PostgresConnectionOptions';
+import {AuthModule} from './modules/auth/auth.module';
 import { CategoriesModule } from './modules/categories/categories.module';
 import { OrdersModule } from './modules/orders/orders.module';
 import { ProductsModule } from './modules/products/products.module';
@@ -25,7 +26,8 @@ import { SharedModule } from './shared/shared.module';
           database: configService.get<string>('DB_DATABASE'),
           entities: [__dirname + '/**/*.entity{.ts,.js}'],
           migrations: [__dirname + '/migration/*{.ts,.js}'],
-          migrationsRun: true,
+          // migrationsRun: true,
+          synchronize: true,
           logging: ['info', 'log', 'migration'],
         } as PostgresConnectionOptions;
       },
@@ -33,6 +35,7 @@ import { SharedModule } from './shared/shared.module';
     }),
 
     // Feature modules
+    AuthModule,
     CategoriesModule,
     ProductsModule,
     OrdersModule,
