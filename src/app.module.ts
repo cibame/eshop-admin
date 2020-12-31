@@ -25,7 +25,7 @@ import { SharedModule } from './shared/shared.module';
           database: configService.get<string>('DB_DATABASE'),
           entities: [__dirname + '/**/*.entity{.ts,.js}'],
           migrations: [__dirname + '/migration/*{.ts,.js}'],
-          // migrationsRun: true,
+          migrationsRun: true,
           logging: ['info', 'log', 'migration'],
         } as PostgresConnectionOptions;
       },

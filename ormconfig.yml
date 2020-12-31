@@ -8,5 +8,4 @@ default:
   database: 'eshop'
   entities:
     - 'dist/**/*.entity{.ts,.js}'
-  synchronize: false
-  logging: true
+  synchronize: true
