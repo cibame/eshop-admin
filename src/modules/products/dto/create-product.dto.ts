@@ -1,5 +1,12 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsBase64, IsNumber, IsOptional, IsString, Min } from 'class-validator';
+import {
+  IsBase64,
+  IsBoolean,
+  IsNumber,
+  IsOptional,
+  IsString,
+  Min,
+} from 'class-validator';
 
 export class CreateProductDto {
   @ApiProperty()
@@ -23,6 +30,9 @@ export class CreateProductDto {
   @Min(0)
   categoryId?: number;
   @ApiProperty()
+  @IsBoolean()
+  @IsOptional()
+  available?: boolean;
   @IsBase64()
   @IsOptional()
   image?: string;

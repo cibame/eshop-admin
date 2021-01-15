@@ -23,8 +23,6 @@ describe('Products Module', () => {
     await app.close();
   });
 
-  // TODO: missing GET:id product
-
   describe('GET /products API', () => {
     it('[NOT-AUTHENTICATED] must return all products ', async () => {
       const { body } = await request(httpServer)
@@ -42,12 +40,31 @@ describe('Products Module', () => {
     });
   });
 
+  describe('GET /products:id API', () => {
+    it('[NOT-AUTHENTICATED] must return a single product ', async () => {
+      const { body } = await request(httpServer)
+        .get('/products/1')
+        .expect(HttpStatus.OK);
+      
+      const testElement: Product = body;
+      expect(testElement.id).not.toBeNull();
+      expect(testElement.id).toBe(1);
+    });
+
+    it('must return 404 on not existing product', async () => {
+      await request(httpServer)
+        .get('/products/999')
+        .expect(HttpStatus.NOT_FOUND);
+    });
+  });
+
   describe('POST /products API', () => {
     const product: CreateProductDto = {
       name: 'test',
       description: 'test product',
       ingredients: 'three spoon of sugar',
       price: 15,
+      available: false,
     };
 
     it('must create a product with a category associated', async () => {
@@ -94,6 +111,7 @@ describe('Products Module', () => {
       description: 'test product edited',
       ingredients: 'three spoon of sugar edited',
       price: 10,
+      available: true,
     };
 
     it('must edit a product', async () => {

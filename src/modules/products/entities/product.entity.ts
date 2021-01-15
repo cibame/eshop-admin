@@ -47,6 +47,10 @@ export class Product extends BaseEntity {
   active: boolean;
 
   @ApiProperty({ readOnly: true })
+  @Column({ default: true })
+  available: boolean;
+
+  @ApiProperty({ readOnly: true })
   @Column({
     type: 'decimal',
     nullable: false,
