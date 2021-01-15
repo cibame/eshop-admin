@@ -23,6 +23,8 @@ describe('Products Module', () => {
     await app.close();
   });
 
+  // TODO: missing GET:id product
+
   describe('GET /products API', () => {
     it('[NOT-AUTHENTICATED] must return all products ', async () => {
       const { body } = await request(httpServer)
