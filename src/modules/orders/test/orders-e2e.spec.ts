@@ -7,6 +7,7 @@ import {
   SendMailOptions,
 } from '../../../shared/mailer/mailer/mailer.provider';
 import { CreateOrderDto } from '../dto/create-order.dto';
+import { UpdateOrderStatusDTo } from '../dto/update-order-status.dto';
 import { UpdateOrderDto } from '../dto/update-order.dto';
 import { Order, OrderStatus, OrderType } from '../entities/order.entity';
 import { OrdersModule } from '../orders.module';
@@ -34,7 +35,7 @@ describe('Orders Module', () => {
   });
 
   describe('GET /orders API', () => {
-    it('[NOT-AUTHENTICATED] must return all orders ', async () => {
+    it('must return all orders ', async () => {
       const { body } = await request(httpServer)
         .get('/orders')
         .expect(HttpStatus.OK);
@@ -52,7 +53,7 @@ describe('Orders Module', () => {
   });
 
   describe('GET /orders/:id API', () => {
-    it('[NOT-AUTHENTICATED] must return an order if it exists ', async () => {
+    it('must return an order if it exists ', async () => {
       const { body } = await request(httpServer)
         .get('/orders/1')
         .expect(HttpStatus.OK);
@@ -61,7 +62,7 @@ describe('Orders Module', () => {
       expect(testElement.id).toBe(1);
     });
 
-    it('[NOT-AUTHENTICATED] must return 404 if the order id does not exists', (): request.Test => {
+    it('must return 404 if the order id does not exists', (): request.Test => {
       return request(httpServer)
         .get('/orders/999')
         .expect(HttpStatus.NOT_FOUND);
@@ -71,7 +72,7 @@ describe('Orders Module', () => {
   describe('GET /orders/uuid/{uuid} API', () => {
     const orderUUID = 'UUID_TEST_ORDER_1';
 
-    it('[NOT-AUTHENTICATED] must return the order for a correct UUID', async () => {
+    it('must return the order for a correct UUID', async () => {
       const { body } = await request(httpServer)
         .get(`/orders/uuid/${orderUUID}`)
         .expect(HttpStatus.OK);
@@ -80,7 +81,7 @@ describe('Orders Module', () => {
       expect(testElem.id).toBe(1);
     });
 
-    it('[NOT-AUTHENTICATED] must return 404 if the UUID does not exists', (): request.Test => {
+    it('must return 404 if the UUID does not exists', (): request.Test => {
       return request(httpServer)
         .get('/orders/uuid/test')
         .expect(HttpStatus.NOT_FOUND);
@@ -116,7 +117,7 @@ describe('Orders Module', () => {
     const productName1 = 'Prodotto Test 1 Ordine 1';
     const productName2 = 'Prodotto Test 2 Ordine 2';
 
-    it('[NOT-AUTHENTICATED] must create an order correctly ', async () => {
+    it('must create an order correctly ', async () => {
       const mailerProvider = app.get(MailerProvider);
       jest
         .spyOn(mailerProvider, 'send')
@@ -161,7 +162,7 @@ describe('Orders Module', () => {
       expect(testElement.total).toBe(330);
     });
 
-    it('[NOT-AUTHENTICATED] must return 400 if one of the product does not exists ', (): request.Test => {
+    it('must return 400 if one of the product does not exists ', (): request.Test => {
       const newOrder: CreateOrderDto = {
         note: 'note',
         type: OrderType.Delivery,
@@ -185,7 +186,7 @@ describe('Orders Module', () => {
         .expect(HttpStatus.BAD_REQUEST);
     });
 
-    it('[NOT-AUTHENTICATED] must send an email to user when order is placed', async () => {
+    it('must send an email to user when order is placed', async () => {
       spy.mockImplementation((option: SendMailOptions) => {
         return new Promise((resolve, _reject) => {
           resolve({});
@@ -208,7 +209,7 @@ describe('Orders Module', () => {
       );
     });
 
-    it('[NOT-AUTHENTICATED] must create an order in waiting-confirmation status ', async () => {
+    it('must create an order in waiting-confirmation status ', async () => {
       const { body } = await request(httpServer)
         .post('/orders')
         .send(newOrder)
@@ -219,7 +220,7 @@ describe('Orders Module', () => {
       expect(testElement.status).toBe(OrderStatus.WaitingConfirmation);
     });
 
-    it('[NOT-AUTHENTICATED] must create an UUID attached to the order', async () => {
+    it('must create an UUID attached to the order', async () => {
       const { body } = await request(httpServer)
         .post('/orders')
         .send(newOrder)
@@ -357,6 +358,37 @@ describe('Orders Module', () => {
     it('must return 404 if the order id does not exists', (): request.Test => {
       return request(httpServer)
         .put('/orders/999')
+        .expect(HttpStatus.NOT_FOUND);
+    });
+  });
+
+  describe('POST /orders/:id/status API', () => {
+    const statusChange: UpdateOrderStatusDTo = {
+      status: OrderStatus.Cancelled,
+      statusChangeNote: 'Cancellato',
+    };
+
+    it('must change order status ', async () => {
+      await request(httpServer)
+        .post('/orders/1/status')
+        .send(statusChange)
+        .expect(HttpStatus.OK);
+
+      // Validate the result
+      const { body } = await request(httpServer)
+        .get('/orders/1')
+        .expect(HttpStatus.OK);
+
+      const testElement: Order = body;
+      expect(testElement.id).toBe(1);
+      expect(testElement.status).toBe(statusChange.status);
+      expect(testElement.statusChangeNote).toBe(statusChange.statusChangeNote);
+    });
+
+    it('must return 404 if the order id does not exists', (): request.Test => {
+      return request(httpServer)
+        .post('/orders/999/status')
+        .send(statusChange)
         .expect(HttpStatus.NOT_FOUND);
     });
   });

@@ -5,6 +5,7 @@ import { ListQuery } from '../../shared/service/paginate/model/list-query.model'
 import { PaginateService } from '../../shared/service/paginate/paginate.service';
 import { Product } from '../products/entities/product.entity';
 import { CreateOrderDto, CreateOrderProductDto } from './dto/create-order.dto';
+import { UpdateOrderStatusDTo } from './dto/update-order-status.dto';
 import { UpdateOrderDto } from './dto/update-order.dto';
 import { OrderProduct } from './entities/order-product.entity';
 import { OrderUser } from './entities/order-user.entity';
@@ -107,6 +108,15 @@ export class OrdersService {
     // Change order detail if neede
     await this._orderRepository.save(order);
     return this.findOne(id);
+  }
+
+  async updateStatus(id: number, updateOrderStatusDto: UpdateOrderStatusDTo) {
+    const order = await this._orderRepository.findOneOrFail(id);
+
+    order.status = updateOrderStatusDto.status;
+    order.statusChangeNote = updateOrderStatusDto.statusChangeNote;
+
+    await this._orderRepository.save(order);
   }
 
   private async createOrderProducts(

@@ -57,6 +57,10 @@ export class Order extends BaseEntity {
   @ApiProperty({ readOnly: true })
   status: OrderStatus;
 
+  @Column({ nullable: true })
+  @ApiProperty({ readOnly: true })
+  statusChangeNote?: string;
+
   @Column({ nullable: false })
   @ApiProperty({ readOnly: true })
   uuid: string;
