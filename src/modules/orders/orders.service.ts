@@ -26,13 +26,6 @@ export class OrdersService {
     private readonly paginate: PaginateService,
   ) {}
 
-  findOne(uuid: string) {
-    return this._orderRepository.findOne({
-      where: { uuid },
-      relations: ['user', 'products', 'products.product'],
-    });
-  }
-
   findAll(): Promise<Order[]>;
   findAll(query: ListQuery): Promise<OrderPaginatedList>;
   async findAll(listQuery?: ListQuery) {
@@ -46,6 +39,19 @@ export class OrdersService {
       );
     }
     return this._orderRepository.find({
+      relations: ['user', 'products', 'products.product'],
+    });
+  }
+
+  findOne(id: number) {
+    return this._orderRepository.findOne(id, {
+      relations: ['user', 'products', 'products.product'],
+    });
+  }
+
+  findOneUUID(uuid: string) {
+    return this._orderRepository.findOne({
+      where: { uuid },
       relations: ['user', 'products', 'products.product'],
     });
   }

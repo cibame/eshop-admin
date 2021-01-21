@@ -50,6 +50,42 @@ describe('Orders Module', () => {
     });
   });
 
+  describe('GET /orders/:id API', () => {
+    it('[NOT-AUTHENTICATED] must return an order if it exists ', async () => {
+      const { body } = await request(httpServer)
+        .get('/orders/1')
+        .expect(HttpStatus.OK);
+
+      const testElement: Order = body;
+      expect(testElement.id).toBe(1);
+    });
+
+    it('[NOT-AUTHENTICATED] must return 404 if the order id does not exists', (): request.Test => {
+      return request(httpServer)
+        .get('/orders/999')
+        .expect(HttpStatus.NOT_FOUND);
+    });
+  });
+
+  describe('GET /orders/uuid/{uuid} API', () => {
+    const orderUUID = 'UUID_TEST_ORDER_1';
+
+    it('[NOT-AUTHENTICATED] must return the order for a correct UUID', async () => {
+      const { body } = await request(httpServer)
+        .get(`/orders/uuid/${orderUUID}`)
+        .expect(HttpStatus.OK);
+
+      const testElem: Order = body;
+      expect(testElem.id).toBe(1);
+    });
+
+    it('[NOT-AUTHENTICATED] must return 404 if the UUID does not exists', (): request.Test => {
+      return request(httpServer)
+        .get('/orders/uuid/test')
+        .expect(HttpStatus.NOT_FOUND);
+    });
+  });
+
   describe('POST /orders API', () => {
     const newOrder: CreateOrderDto = {
       note: 'note',
@@ -174,25 +210,6 @@ describe('Orders Module', () => {
       const testElement: Order = body;
       expect(testElement.id).toBeDefined();
       expect(testElement.uuid).toBeDefined();
-    });
-  });
-
-  describe('GET /orders/{uuid} API', () => {
-    const orderUUID = 'UUID_TEST_ORDER_1';
-
-    it('[NOT-AUTHENTICATED] must return the order for a correct UUID', async () => {
-      const { body } = await request(httpServer)
-        .get(`/orders/${orderUUID}`)
-        .expect(HttpStatus.OK);
-
-      const testElem: Order = body;
-      expect(testElem.id).toBe(1);
-    });
-
-    it('[NOT-AUTHENTICATED] must return 404 if the UUID does not exists', (): request.Test => {
-      return request(httpServer)
-        .get('/orders/test')
-        .expect(HttpStatus.NOT_FOUND);
     });
   });
 });

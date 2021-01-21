@@ -6,6 +6,8 @@ import {
   Param,
   Post,
   Query,
+  Req,
+  UseGuards,
   UsePipes,
   ValidationPipe,
 } from '@nestjs/common';
@@ -15,6 +17,7 @@ import { MailerProvider } from '../../shared/mailer/mailer/mailer.provider';
 import { ListQuery } from '../../shared/service/paginate/model/list-query.model';
 import { CreateOrderDto } from './dto/create-order.dto';
 import { Order } from './entities/order.entity';
+import { OrderGuard } from './guard/order.guard';
 import { OrderPaginatedList } from './model/order-paginated-list';
 import { OrderProductPipe } from './order-product.pipe';
 import { OrdersService } from './orders.service';
@@ -38,14 +41,20 @@ export class OrdersController {
   @Get('/paginated')
   @ApiResponse({ type: OrderPaginatedList })
   findPaginated(@Query() query: ListQuery): Promise<OrderPaginatedList> {
-    console.log('here');
     return this.ordersService.findAll(query);
   }
 
-  @Get(':uuid')
+  @Get(':id')
+  @UseGuards(OrderGuard)
   @ApiResponse({ type: Order })
-  async findOne(@Param('uuid') uuid: string) {
-    const order = await this.ordersService.findOne(uuid);
+  findOne(@Param('id') _: string, @Req() req): Promise<Order> {
+    return req.order;
+  }
+
+  @Get('/uuid/:uuid')
+  @ApiResponse({ type: Order })
+  async findOneUUID(@Param('uuid') uuid: string) {
+    const order = await this.ordersService.findOneUUID(uuid);
     if (!order) {
       throw new NotFoundException();
     }
