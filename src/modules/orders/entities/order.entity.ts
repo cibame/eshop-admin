@@ -74,6 +74,7 @@ export class Order extends BaseEntity {
   @ApiProperty({ type: () => OrderProduct, readOnly: true })
   products: OrderProduct[];
 
+  //TODO: remove all admin=bro related stuff from entities
   @RelationId((order: Order) => order.user)
   userId: number;
 

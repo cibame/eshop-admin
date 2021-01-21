@@ -12,3 +12,9 @@ items:
     name: 'Prodotto Test Ordine 2'
     product: '@product-order2'
     order: '@order1'
+  order-product3:
+    quantity: 2
+    price: 10
+    name: 'Prodotto Test Ordine 2'
+    product: '@product-order2'
+    order: '@order2'

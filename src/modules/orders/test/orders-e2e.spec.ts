@@ -32,7 +32,25 @@ describe('Orders Module', () => {
     await app.close();
   });
 
-  describe('POST /products API', () => {
+  describe('GET /orders API', () => {
+    it('[NOT-AUTHENTICATED] must return all orders ', async () => {
+      const { body } = await request(httpServer)
+        .get('/orders')
+        .expect(HttpStatus.OK);
+      expect(body.length).toEqual(2);
+      // Validate all key in object are presents
+      const testElement: Order = body[1];
+      expect(testElement.id).not.toBeNull();
+      expect(testElement.total).toBe(20);
+      expect(testElement.type).not.toBeNull();
+      expect(testElement.status).not.toBeNull();
+      expect(testElement.uuid).not.toBeNull();
+      expect(testElement.products.length).toBe(1);
+      expect(testElement.user).not.toBeNull();
+    });
+  });
+
+  describe('POST /orders API', () => {
     const newOrder: CreateOrderDto = {
       note: 'note',
       type: OrderType.Delivery,
@@ -71,7 +89,7 @@ describe('Orders Module', () => {
         .expect(HttpStatus.CREATED);
       // Validate all key in object are presents
       const testElement: Order = body;
-      expect(testElement.id).toBe(2);
+      expect(testElement.id).not.toBeNull();
       expect(testElement.note).toBe(newOrder.note);
       expect(testElement.type).toBe(newOrder.type);
       // Match user
@@ -143,7 +161,7 @@ describe('Orders Module', () => {
         .expect(HttpStatus.CREATED);
       // Validate all key in object are presents
       const testElement: Order = body;
-      expect(testElement.id).toBe(2);
+      expect(testElement.id).toBeDefined();
       expect(testElement.status).toBe(OrderStatus.WaitingConfirmation);
     });
 
@@ -154,13 +172,13 @@ describe('Orders Module', () => {
         .expect(HttpStatus.CREATED);
       // Validate all key in object are presents
       const testElement: Order = body;
-      expect(testElement.id).toBe(2);
+      expect(testElement.id).toBeDefined();
       expect(testElement.uuid).toBeDefined();
     });
   });
 
   describe('GET /orders/{uuid} API', () => {
-    const orderUUID = 'UUID_TEST_ORDER';
+    const orderUUID = 'UUID_TEST_ORDER_1';
 
     it('[NOT-AUTHENTICATED] must return the order for a correct UUID', async () => {
       const { body } = await request(httpServer)
@@ -173,7 +191,7 @@ describe('Orders Module', () => {
 
     it('[NOT-AUTHENTICATED] must return 404 if the UUID does not exists', (): request.Test => {
       return request(httpServer)
-        .get('/orders?uuid=test')
+        .get('/orders/test')
         .expect(HttpStatus.NOT_FOUND);
     });
   });

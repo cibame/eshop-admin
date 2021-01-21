@@ -22,6 +22,19 @@ export class OrdersService {
     private readonly _productRepository: Repository<Product>,
   ) {}
 
+  findOne(uuid: string) {
+    return this._orderRepository.findOne({
+      where: { uuid },
+      relations: ['user', 'products', 'products.product'],
+    });
+  }
+
+  findAll() {
+    return this._orderRepository.find({
+      relations: ['user', 'products', 'products.product'],
+    });
+  }
+
   async create(createOrderDto: CreateOrderDto) {
     // Save all the products related to the order
     const products = [];
@@ -59,24 +72,7 @@ export class OrdersService {
     return await this._orderRepository.save(order);
   }
 
-  findOne(uuid: string) {
-    return this._orderRepository.findOne({
-      where: { uuid },
-      relations: ['user', 'products', 'products.product'],
-    });
-  }
-
-  findAll() {
-    return this._orderRepository.find({
-      relations: ['user', 'products', 'products.product'],
-    });
-  }
-
   update(id: number, updateOrderDto: UpdateOrderDto) {
     return `This action updates a #${id} order`;
-  }
-
-  remove(id: number) {
-    return `This action removes a #${id} order`;
   }
 }
