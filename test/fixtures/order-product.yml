@@ -3,10 +3,18 @@ items:
   order-product1:
     quantity: 2
     price: 10
+    name: 'Prodotto Test Ordine 1'
     product: '@product-order1'
     order: '@order1'
   order-product2:
     quantity: 1
     price: 5
+    name: 'Prodotto Test 2 Ordine 1'
     product: '@product-order2'
     order: '@order1'
+  order-product3:
+    quantity: 2
+    price: 10
+    name: 'Prodotto Test 1 Ordine 2'
+    product: '@product-order2'
+    order: '@order2'

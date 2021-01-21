@@ -57,11 +57,15 @@ export class Order extends BaseEntity {
   @ApiProperty({ readOnly: true })
   status: OrderStatus;
 
+  @Column({ nullable: true })
+  @ApiProperty({ readOnly: true })
+  statusChangeNote?: string;
+
   @Column({ nullable: false })
   @ApiProperty({ readOnly: true })
   uuid: string;
 
-  @OneToOne(() => OrderUser)
+  @OneToOne(() => OrderUser, { eager: true })
   @JoinColumn()
   @ApiProperty({ type: () => OrderUser, readOnly: true })
   user: OrderUser;
@@ -74,6 +78,7 @@ export class Order extends BaseEntity {
   @ApiProperty({ type: () => OrderProduct, readOnly: true })
   products: OrderProduct[];
 
+  //TODO: remove all admin=bro related stuff from entities
   @RelationId((order: Order) => order.user)
   userId: number;
 

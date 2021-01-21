@@ -23,6 +23,12 @@ export class CreateOrderProductDto {
   @IsPositive()
   @ApiProperty()
   quantity: number;
+
+  @IsNumber()
+  @IsPositive()
+  @IsOptional()
+  @ApiProperty()
+  price?: number;
 }
 
 export class CreateOrderUserDto {

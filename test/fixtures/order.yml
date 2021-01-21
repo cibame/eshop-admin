@@ -5,4 +5,10 @@ items:
     note: 'Note allegate ordine 1'
     type: 'pickup'
     user: '@order-user1'
-    uuid: UUID_TEST_ORDER
+    uuid: UUID_TEST_ORDER_1
+  order2:
+    id: 2
+    note: 'Note allegate ordine 2'
+    type: 'delivery'
+    user: '@order-user2'
+    uuid: UUID_TEST_ORDER_2

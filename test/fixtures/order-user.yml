@@ -6,3 +6,9 @@ items:
     email: email@orderuser.1
     address: 'address order user1'
     telephone: 3298811324
+  order-user2:
+    firstName: OrderUserNome2
+    lastName: OrderUserCognome2
+    email: email@orderuser.2
+    address: 'address order user2'
+    telephone: 3298811324
