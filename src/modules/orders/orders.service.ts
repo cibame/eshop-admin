@@ -37,6 +37,7 @@ export class OrdersService {
 
       const orderProduct = new OrderProduct();
       orderProduct.price = product.price;
+      orderProduct.name = product.name;
       orderProduct.quantity = orderProductDto.quantity;
       orderProduct.product = product;
       products.push(await this._orderProductRepository.save(orderProduct));

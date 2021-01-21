@@ -53,6 +53,7 @@ describe('Orders Module', () => {
 
     // From fixtures
     const productPrice = 10;
+    const productName = 'Prodotto Test Ordine 1';
 
     it('[NOT-AUTHENTICATED] must create an order correctly ', async () => {
       const mailerProvider = app.get(MailerProvider);
@@ -84,6 +85,7 @@ describe('Orders Module', () => {
         newOrder.products[0].quantity,
       );
       expect(testElement.products[0].price).toBe(productPrice);
+      expect(testElement.products[0].name).toBe(productName);
       expect(testElement.total).toBe(30);
     });
 
@@ -123,7 +125,7 @@ describe('Orders Module', () => {
         .send(newOrder)
         .expect(HttpStatus.CREATED);
 
-      // Validate each parameter passed to the mail
+      // TODO: Validate each parameter passed to the mail
       expect(spy).toHaveBeenCalledWith(
         expect.objectContaining({
           to: newOrder.user.email,

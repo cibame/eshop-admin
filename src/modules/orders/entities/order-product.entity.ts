@@ -34,6 +34,10 @@ export class OrderProduct extends BaseEntity {
   price: number;
 
   @ApiProperty({ readOnly: true })
+  @Column({ nullable: false })
+  name: string;
+
+  @ApiProperty({ readOnly: true })
   @ManyToOne(() => Product, null, { eager: true })
   @JoinColumn({ name: 'productId' })
   product: Product;
