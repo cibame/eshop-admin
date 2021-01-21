@@ -1,5 +1,6 @@
 import { forwardRef, Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { PaginateService } from '../../shared/service/paginate/paginate.service';
 import { SharedModule } from '../../shared/shared.module';
 import { Product } from '../products/entities/product.entity';
 import { ProductsModule } from '../products/products.module';
@@ -17,6 +18,7 @@ import { OrdersService } from './orders.service';
     SharedModule,
   ],
   controllers: [OrdersController],
-  providers: [OrdersService, OrderProductPipe],
+  // TODO: paginateService is ugly, remote once we have the features online
+  providers: [OrdersService, OrderProductPipe, PaginateService],
 })
 export class OrdersModule {}

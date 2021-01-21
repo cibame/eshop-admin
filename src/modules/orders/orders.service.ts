@@ -1,12 +1,15 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
+import { ListQuery } from '../../shared/service/paginate/model/list-query.model';
+import { PaginateService } from '../../shared/service/paginate/paginate.service';
 import { Product } from '../products/entities/product.entity';
 import { CreateOrderDto } from './dto/create-order.dto';
 import { UpdateOrderDto } from './dto/update-order.dto';
 import { OrderProduct } from './entities/order-product.entity';
 import { OrderUser } from './entities/order-user.entity';
 import { Order, OrderStatus } from './entities/order.entity';
+import { OrderPaginatedList } from './model/order-paginated-list';
 import uuid = require('uuid');
 
 @Injectable()
@@ -20,6 +23,7 @@ export class OrdersService {
     private readonly _orderUserRepository: Repository<OrderUser>,
     @InjectRepository(Product)
     private readonly _productRepository: Repository<Product>,
+    private readonly paginate: PaginateService,
   ) {}
 
   findOne(uuid: string) {
@@ -29,13 +33,24 @@ export class OrdersService {
     });
   }
 
-  findAll() {
+  findAll(): Promise<Order[]>;
+  findAll(query: ListQuery): Promise<OrderPaginatedList>;
+  async findAll(listQuery?: ListQuery) {
+    if (listQuery) {
+      return this.paginate.findAndPaginate(
+        listQuery,
+        this._orderRepository,
+        ['note', 'type', 'status', 'uuid', 'user.name', 'user.email'],
+        ['user', 'products'],
+        // TODO: add relations products.product, this does not work as the relation builder use this.baseAlias (line 44 paginate.service.ts)
+      );
+    }
     return this._orderRepository.find({
       relations: ['user', 'products', 'products.product'],
     });
   }
 
-  async create(createOrderDto: CreateOrderDto) {
+  async create(createOrderDto: CreateOrderDto): Promise<Order> {
     // Save all the products related to the order
     const products = [];
 
