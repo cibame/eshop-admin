@@ -61,7 +61,7 @@ export class Order extends BaseEntity {
   @ApiProperty({ readOnly: true })
   uuid: string;
 
-  @OneToOne(() => OrderUser)
+  @OneToOne(() => OrderUser, { eager: true })
   @JoinColumn()
   @ApiProperty({ type: () => OrderUser, readOnly: true })
   user: OrderUser;

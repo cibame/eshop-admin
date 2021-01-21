@@ -5,6 +5,7 @@ import {
   NotFoundException,
   Param,
   Post,
+  Put,
   Query,
   Req,
   UseGuards,
@@ -16,6 +17,7 @@ import { ApiCreatedResponse, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { MailerProvider } from '../../shared/mailer/mailer/mailer.provider';
 import { ListQuery } from '../../shared/service/paginate/model/list-query.model';
 import { CreateOrderDto } from './dto/create-order.dto';
+import { UpdateOrderDto } from './dto/update-order.dto';
 import { Order } from './entities/order.entity';
 import { OrderGuard } from './guard/order.guard';
 import { OrderPaginatedList } from './model/order-paginated-list';
@@ -62,6 +64,17 @@ export class OrdersController {
     return order;
   }
 
+  @Put(':id')
+  @UseGuards(OrderGuard)
+  @UsePipes(OrderProductPipe)
+  @ApiResponse({ type: Order })
+  editOne(
+    @Param('id') id: string,
+    @Body() updateOrderDto: UpdateOrderDto,
+  ): Promise<Order> {
+    return this.ordersService.update(+id, updateOrderDto);
+  }
+
   @Post()
   @ApiCreatedResponse({ type: Order })
   @UsePipes(OrderProductPipe)
@@ -104,15 +117,4 @@ export class OrdersController {
 
     return order;
   }
-}
-
-export class HideOrder {
-  constructor(private readonly ordersService: OrdersService) {}
-
-  //TODO: evaluate what can be changed for a single order
-  //TODO: protect with a random generated token, the order (unauthenticated user)
-  // @Put(':id')
-  // update(@Param('id') id: string, @Body() updateOrderDto: UpdateOrderDto) {
-  //   return this.ordersService.update(+id, updateOrderDto);
-  // }
 }

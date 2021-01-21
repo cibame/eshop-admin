@@ -4,7 +4,7 @@ import { Repository } from 'typeorm';
 import { ListQuery } from '../../shared/service/paginate/model/list-query.model';
 import { PaginateService } from '../../shared/service/paginate/paginate.service';
 import { Product } from '../products/entities/product.entity';
-import { CreateOrderDto } from './dto/create-order.dto';
+import { CreateOrderDto, CreateOrderProductDto } from './dto/create-order.dto';
 import { UpdateOrderDto } from './dto/update-order.dto';
 import { OrderProduct } from './entities/order-product.entity';
 import { OrderUser } from './entities/order-user.entity';
@@ -58,24 +58,7 @@ export class OrdersService {
 
   async create(createOrderDto: CreateOrderDto): Promise<Order> {
     // Save all the products related to the order
-    const products = [];
-
-    for (const orderProductDto of createOrderDto.products) {
-      const product = await this._productRepository.findOne(
-        orderProductDto.productId,
-      );
-
-      if (!product) {
-        continue;
-      }
-
-      const orderProduct = new OrderProduct();
-      orderProduct.price = product.price;
-      orderProduct.name = product.name;
-      orderProduct.quantity = orderProductDto.quantity;
-      orderProduct.product = product;
-      products.push(await this._orderProductRepository.save(orderProduct));
-    }
+    const products = await this.createOrderProducts(createOrderDto.products);
 
     // Save the user
     const user = this._orderUserRepository.create(createOrderDto.user);
@@ -93,7 +76,57 @@ export class OrdersService {
     return await this._orderRepository.save(order);
   }
 
-  update(id: number, updateOrderDto: UpdateOrderDto) {
-    return `This action updates a #${id} order`;
+  async update(id: number, updateOrderDto: UpdateOrderDto): Promise<Order> {
+    const order = await this._orderRepository.findOneOrFail(id, {
+      relations: ['user', 'products', 'products.product'],
+    });
+
+    if (updateOrderDto.products) {
+      // Delete existing products
+      await Promise.all(
+        order.products.map(p => this._orderProductRepository.remove(p)),
+      );
+
+      // Add all new products
+      const products = await this.createOrderProducts(updateOrderDto.products);
+      order.products = products;
+    }
+
+    if (updateOrderDto.user) {
+      const user = await this._orderUserRepository.preload({
+        id: order.user.id,
+        ...updateOrderDto.user,
+      });
+      await this._orderUserRepository.save(user);
+    }
+
+    // change all order details
+    order.note = updateOrderDto.note ? updateOrderDto.note : order.note;
+    order.type = updateOrderDto.type ? updateOrderDto.type : order.type;
+
+    // Change order detail if neede
+    await this._orderRepository.save(order);
+    return this.findOne(id);
+  }
+
+  private async createOrderProducts(
+    orderProducts: CreateOrderProductDto[],
+  ): Promise<OrderProduct[]> {
+    return Promise.all(orderProducts.map(op => this.createOrderProduct(op)));
+  }
+
+  private async createOrderProduct(
+    createOrderProduct: CreateOrderProductDto,
+  ): Promise<OrderProduct> {
+    const product = await this._productRepository.findOneOrFail(
+      createOrderProduct.productId,
+    );
+
+    const orderProduct = new OrderProduct();
+    orderProduct.price = product.price;
+    orderProduct.name = product.name;
+    orderProduct.quantity = createOrderProduct.quantity;
+    orderProduct.product = product;
+    return this._orderProductRepository.save(orderProduct);
   }
 }

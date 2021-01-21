@@ -7,6 +7,7 @@ import {
   SendMailOptions,
 } from '../../../shared/mailer/mailer/mailer.provider';
 import { CreateOrderDto } from '../dto/create-order.dto';
+import { UpdateOrderDto } from '../dto/update-order.dto';
 import { Order, OrderStatus, OrderType } from '../entities/order.entity';
 import { OrdersModule } from '../orders.module';
 
@@ -107,7 +108,7 @@ describe('Orders Module', () => {
 
     // From fixtures
     const productPrice = 10;
-    const productName = 'Prodotto Test Ordine 1';
+    const productName = 'Prodotto Test 1 Ordine 1';
 
     it('[NOT-AUTHENTICATED] must create an order correctly ', async () => {
       const mailerProvider = app.get(MailerProvider);
@@ -210,6 +211,135 @@ describe('Orders Module', () => {
       const testElement: Order = body;
       expect(testElement.id).toBeDefined();
       expect(testElement.uuid).toBeDefined();
+    });
+  });
+
+  describe('PUT /orders/id API', () => {
+    // Change order status (dedicatedAPI?) with explanation for change
+    it('must change order detail if provided', async () => {
+      const updateOrder: UpdateOrderDto = {
+        note: 'edit note',
+        type: OrderType.Delivery,
+      };
+      const { body } = await request(httpServer)
+        .put('/orders/1')
+        .send(updateOrder)
+        .expect(HttpStatus.OK);
+
+      const testElement: Order = body;
+      // Validate base properties
+      expect(testElement.id).toBe(1);
+      expect(testElement.status).toBe(OrderStatus.WaitingConfirmation);
+      expect(testElement.products.length).toBe(2);
+      expect(testElement.products[0].productId).toBe(1);
+      expect(testElement.products[0].quantity).toBe(2);
+      expect(testElement.products[0].price).toBe(10);
+      expect(testElement.total).toBe(25);
+      expect(testElement.user).toMatchObject({
+        firstName: 'OrderUserNome1',
+        lastName: 'OrderUserCognome1',
+        email: 'email@orderuser.1',
+        address: 'address order user1',
+        telephone: '3298811324',
+      });
+
+      // Validate properties added with latest add
+      expect(testElement.note).toBe(updateOrder.note);
+      expect(testElement.type).toBe(updateOrder.type);
+    });
+
+    it('must change user detail if provided', async () => {
+      const updateOrder: UpdateOrderDto = {
+        user: {
+          firstName: 'name  edit',
+          lastName: 'lastname edit',
+          email: 'string@string.comedit',
+          address: 'Via tormini edit',
+          telephone: '3334412402',
+        },
+      };
+      const { body } = await request(httpServer)
+        .put('/orders/1')
+        .send(updateOrder)
+        .expect(HttpStatus.OK);
+
+      const testElement: Order = body;
+      // Validate base properties
+      expect(testElement.id).toBe(1);
+      expect(testElement.note).toBe('Note allegate ordine 1');
+      expect(testElement.type).toBe(OrderType.Pickup);
+      expect(testElement.status).toBe(OrderStatus.WaitingConfirmation);
+      expect(testElement.products.length).toBe(2);
+      expect(testElement.products[0].productId).toBe(1);
+      expect(testElement.products[0].quantity).toBe(2);
+      expect(testElement.products[0].price).toBe(10);
+      expect(testElement.total).toBe(25);
+
+      // Validate properties added with latest add
+      expect(testElement.user).toMatchObject(updateOrder.user);
+    });
+
+    it('must change products in an order', async () => {
+      const updateOrder: UpdateOrderDto = {
+        products: [
+          {
+            productId: 2,
+            quantity: 3,
+          },
+        ],
+      };
+
+      const { body } = await request(httpServer)
+        .put('/orders/1')
+        .send(updateOrder)
+        .expect(HttpStatus.OK);
+
+      const testElement: Order = body;
+      // Validate base properties
+      expect(testElement.id).toBe(1);
+      expect(testElement.note).toBe('Note allegate ordine 1');
+      expect(testElement.type).toBe(OrderType.Pickup);
+      expect(testElement.status).toBe(OrderStatus.WaitingConfirmation);
+      expect(testElement.user).toMatchObject({
+        firstName: 'OrderUserNome1',
+        lastName: 'OrderUserCognome1',
+        email: 'email@orderuser.1',
+        address: 'address order user1',
+        telephone: '3298811324',
+      });
+
+      // Validate properties added with latest edit
+      expect(testElement.products.length).toBe(1);
+      expect(testElement.products[0].productId).toBe(2);
+      expect(testElement.products[0].quantity).toBe(3);
+      expect(testElement.products[0].price).toBe(5);
+      expect(testElement.total).toBe(15);
+    });
+
+    it('must return 400 if change products does not exists', async () => {
+      const updateOrder: UpdateOrderDto = {
+        products: [
+          {
+            productId: 2,
+            quantity: 3,
+          },
+          {
+            productId: 99,
+            quantity: 1232,
+          },
+        ],
+      };
+
+      await request(httpServer)
+        .put('/orders/1')
+        .send(updateOrder)
+        .expect(HttpStatus.BAD_REQUEST);
+    });
+
+    it('must return 404 if the order id does not exists', (): request.Test => {
+      return request(httpServer)
+        .put('/orders/999')
+        .expect(HttpStatus.NOT_FOUND);
     });
   });
 });

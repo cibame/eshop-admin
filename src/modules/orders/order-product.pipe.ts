@@ -14,7 +14,7 @@ export class OrderProductPipe implements PipeTransform {
   async transform(value: any, _metadata: ArgumentMetadata) {
     const dto: CreateOrderDto = value;
     if (!dto.products) {
-      throw new BadRequestException();
+      return value;
     }
 
     const productsIds = dto.products.map(p => p.productId);

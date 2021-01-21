@@ -10,7 +10,7 @@ items:
   # Product Related to Test Order
   product-order1:
     id: 1
-    name: 'Prodotto Test Ordine 1'
+    name: 'Prodotto Test 1 Ordine 1'
     description: '{{lorem.paragraph}}'
     ingredients: '{{lorem.paragraph}}'
     price: 10
@@ -18,7 +18,7 @@ items:
     category: '@category1'
   product-order2:
     id: 2
-    name: 'Prodotto Test Ordine 2'
+    name: 'Prodotto Test 2 Ordine 2'
     detail: '25 cl'
     description: '{{lorem.paragraph}}'
     ingredients: '{{lorem.paragraph}}'
