@@ -103,12 +103,18 @@ describe('Orders Module', () => {
           productId: 1,
           quantity: 3,
         },
+        {
+          productId: 2,
+          quantity: 3,
+          price: 100,
+        },
       ],
     };
 
     // From fixtures
     const productPrice = 10;
-    const productName = 'Prodotto Test 1 Ordine 1';
+    const productName1 = 'Prodotto Test 1 Ordine 1';
+    const productName2 = 'Prodotto Test 2 Ordine 2';
 
     it('[NOT-AUTHENTICATED] must create an order correctly ', async () => {
       const mailerProvider = app.get(MailerProvider);
@@ -131,8 +137,8 @@ describe('Orders Module', () => {
       expect(testElement.type).toBe(newOrder.type);
       // Match user
       expect(testElement.user).toMatchObject(newOrder.user);
-      // Match products
-      expect(testElement.products.length).toBe(1);
+      // Match products normal
+      expect(testElement.products.length).toBe(2);
       expect(testElement.products[0].product.id).toBe(
         newOrder.products[0].productId,
       );
@@ -140,8 +146,19 @@ describe('Orders Module', () => {
         newOrder.products[0].quantity,
       );
       expect(testElement.products[0].price).toBe(productPrice);
-      expect(testElement.products[0].name).toBe(productName);
-      expect(testElement.total).toBe(30);
+      expect(testElement.products[0].name).toBe(productName1);
+      // Match product with specialized price
+      expect(testElement.products[1].product.id).toBe(
+        newOrder.products[1].productId,
+      );
+      expect(testElement.products[1].quantity).toBe(
+        newOrder.products[1].quantity,
+      );
+      expect(testElement.products[1].price).toBe(newOrder.products[1].price);
+      expect(testElement.products[1].name).toBe(productName2);
+
+      // Match total
+      expect(testElement.total).toBe(330);
     });
 
     it('[NOT-AUTHENTICATED] must return 400 if one of the product does not exists ', (): request.Test => {
@@ -285,6 +302,7 @@ describe('Orders Module', () => {
           {
             productId: 2,
             quantity: 3,
+            price: 1,
           },
         ],
       };
@@ -312,8 +330,8 @@ describe('Orders Module', () => {
       expect(testElement.products.length).toBe(1);
       expect(testElement.products[0].productId).toBe(2);
       expect(testElement.products[0].quantity).toBe(3);
-      expect(testElement.products[0].price).toBe(5);
-      expect(testElement.total).toBe(15);
+      expect(testElement.products[0].price).toBe(1);
+      expect(testElement.total).toBe(3);
     });
 
     it('must return 400 if change products does not exists', async () => {

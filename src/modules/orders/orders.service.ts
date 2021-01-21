@@ -123,7 +123,9 @@ export class OrdersService {
     );
 
     const orderProduct = new OrderProduct();
-    orderProduct.price = product.price;
+    orderProduct.price = createOrderProduct.price
+      ? createOrderProduct.price
+      : product.price;
     orderProduct.name = product.name;
     orderProduct.quantity = createOrderProduct.quantity;
     orderProduct.product = product;
